@@ -7,7 +7,7 @@ namespace ly
 {   
     class Actor;
     class Application;
-    class World
+    class World : public Object
     {
         public:
 
@@ -30,8 +30,8 @@ namespace ly
 
         private:
 
-            void BeginPlay();
-            void Tick(float deltaTime_);
+            virtual void BeginPlay();
+            virtual void Tick(float deltaTime_);
             
             Application* mOwningApp;
             bool mBegunPlay{false};
