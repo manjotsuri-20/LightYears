@@ -8,8 +8,9 @@ namespace ly
         :Spaceship{owningWorld_, path_},
         mMoveInput{},
         mSpeed(200.f),
-        mShooter{new BulletShooter{this, 0.2f}}
+        mShooter{new BulletShooter{this, 0.15f}}
     {
+        SetTeamID(1);
     }
 
     void PlayerSpaceship::Tick(float deltaTime_)

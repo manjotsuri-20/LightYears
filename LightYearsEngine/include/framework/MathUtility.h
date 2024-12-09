@@ -34,4 +34,14 @@ namespace ly
         }
         ScaleVector(vector_, 1.0/_vectorLength);
     }
+
+    float LerpFloat(float a_, float b_, float alpha_);
+
+    sf::Vector2f LerpVector(const sf::Vector2f& a_, const sf::Vector2f& b_, float alpha_);
+
+    sf::Color LerpColor(const sf::Color& a_, const sf::Color& b_, float alpha_);
+
+    float RandomRange(float min_, float max_);
+
+    sf::Vector2f RandomUnitVector();
 }

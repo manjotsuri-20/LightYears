@@ -4,6 +4,7 @@
 #include "framework/Core.h"
 #include "framework/AssetManager.h"
 
+class b2Body;
 namespace ly
 {
     class World;
@@ -45,14 +46,42 @@ namespace ly
 
             sf::FloatRect GetActorGlobalBounds() const;
 
-            World* GetWorld() const;
+            const World* GetWorld() const;
+
+            World* GetWorld() { return mOwningWorld; }
 
             bool IsActorOutOfWindowBounds() const;
+
+            void SetEnablePhysics(bool enable_);
+
+            void UpdatePhysicsTransform();
+
+            virtual void OnActorBeginOverlap(Actor* other_);
+
+            virtual void OnActorEndOverlap(Actor* other_);
+
+            virtual void Destroy() override;
+
+            static uint8 GetNeutralTeamID() { return neutralTeamID; }
+
+            uint8 GetTeamID() const { return mTeamID; }
+
+            bool IsOtherHostile(Actor* other_) const;
+
+            void SetTeamID(uint8 teamId_) { mTeamID = teamId_; }
+
+            virtual void ApplyDamage(float amt_);
+
+            sf::Sprite& GetSprite() { return mSprite; }
+
+            const sf::Sprite& GetSprite() const { return mSprite; }
 
             virtual ~Actor();
 
         private:
 
+            void InitializePhysics();
+            void UnInitializedPhysics();
             void CentrePivot();
 
             World* mOwningWorld;
@@ -60,5 +89,12 @@ namespace ly
 
             sf::Sprite mSprite;
             shared<sf::Texture> mTexture;
+            
+            b2Body* mPhysicsBody;
+            bool mPhysicsEnable;
+
+            uint8 mTeamID;
+
+            const static uint8 neutralTeamID = 255;
     };
 }

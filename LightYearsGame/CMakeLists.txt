@@ -1,5 +1,11 @@
 add_executable(${LIGHT_YEARS_GAME_TARGET_NAME}
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/VFX/Explosion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/VFX/Explosion.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/gamePlay/HealthComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gamePlay/HealthComponent.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/include/weapon/Bullet.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/weapon/Bullet.cpp
 

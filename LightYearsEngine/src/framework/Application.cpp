@@ -2,6 +2,7 @@
 #include "framework/Core.h"
 #include "framework/World.h"
 #include "framework/AssetManager.h"
+#include "framework/PhysicsSystem.h"
 
 namespace ly
 {
@@ -55,6 +56,8 @@ namespace ly
         {
             currentWorld->TickInternal(deltaTime_);
         }
+
+        PhysicsSystem::Get().Step(deltaTime_);
 
         if(mCleanCycleClock.getElapsedTime().asSeconds() >= mCleanCycleInterval)
         {

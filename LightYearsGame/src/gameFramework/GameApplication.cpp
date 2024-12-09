@@ -17,19 +17,23 @@ namespace ly
     {
         AssetManager::Get().SetAssetRootDirectory(GetResourceDir());
         weak<World> newWorld = LoadWorld<World>();
-        newWorld.lock()->SpawnActor<Actor>();
+        // newWorld.lock()->SpawnActor<Actor>();
         testPlayerSpaceship = newWorld.lock()->SpawnActor<PlayerSpaceship>();
         // testPlayerSpaceship.lock()->SetTexture(GetResourceDir() + "SpaceShooterRedux/PNG/playerShip1_blue.png");
         testPlayerSpaceship.lock()->SetActorLocation(sf::Vector2f(300.f, 490.f));
         // testPlayerSpaceship.lock()->SetActorRotation(-90.f);
-        testPlayerSpaceship.lock()->SetVelocity(sf::Vector2f(0.f, -200.f));
-        counter = 0;
+
+        weak<Spaceship> _testSpaceship = newWorld.lock()->SpawnActor<Spaceship>();
+        _testSpaceship.lock()->SetTexture("SpaceShooterRedux/PNG/playerShip1_blue.png");
+        _testSpaceship.lock()->SetActorLocation(sf::Vector2f{100.f, 50.f});
+        _testSpaceship.lock()->SetTeamID(2);
+        counter = 0.f;
     }
 
     void GameApplication::Tick(float deltaTime_)
     {
-        // counter += deltaTime_;
-        // if(counter > 2.f)
+        counter += deltaTime_;
+        // if(counter > 10.f)
         // {
         //     if(!testPlayerSpaceship.expired())
         //     {

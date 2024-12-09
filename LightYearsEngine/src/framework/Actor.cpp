@@ -1,7 +1,9 @@
+#include <box2d/b2_body.h>
 #include "framework/Actor.h"
 #include "framework/Core.h"
 #include "framework/MathUtility.h"
 #include "framework/World.h"
+#include "framework/PhysicsSystem.h"
 
 namespace ly
 {
@@ -9,7 +11,10 @@ namespace ly
         : mOwningWorld(owningWorld), 
         mHasBeganPlay(false),
         mSprite{},
-        mTexture{}
+        mTexture{},
+        mPhysicsBody{nullptr},
+        mPhysicsEnable{false},
+        mTeamID{GetNeutralTeamID()}
     {
         SetTexture(texturePath_);
     }
@@ -65,11 +70,13 @@ namespace ly
     void Actor::SetActorLocation(const sf::Vector2f& newLoc_)
     {
         mSprite.setPosition(newLoc_);
+        UpdatePhysicsTransform();
     }
 
     void Actor::SetActorRotation(float newRot_)
     {
         mSprite.setRotation(newRot_);
+        UpdatePhysicsTransform();
     }
 
     void Actor::AddActorLocationOffset(const sf::Vector2f &offsetAmt_)
@@ -118,7 +125,24 @@ namespace ly
         mSprite.setOrigin(_bound.width/2.f, _bound.height/2.f);
     }
 
-    World* Actor::GetWorld() const
+    void Actor::InitializePhysics()
+    {
+        if(!mPhysicsBody)
+        {
+            mPhysicsBody = PhysicsSystem::Get().AddListener(this);
+        }
+    }
+            
+    void Actor::UnInitializedPhysics()
+    {
+        if(mPhysicsBody)
+        {
+            PhysicsSystem::Get().RemoveListener(mPhysicsBody);
+            mPhysicsBody = nullptr;
+        }
+    }
+
+    const World* Actor::GetWorld() const
     {
         return mOwningWorld;
     }
@@ -153,9 +177,66 @@ namespace ly
         return false;
     }
 
+    void Actor::SetEnablePhysics(bool enable_)
+    {
+        mPhysicsEnable = enable_;
+        if(mPhysicsEnable)
+        {
+            InitializePhysics();
+        }
+        else
+        {
+            UnInitializedPhysics();
+        }
+    }
+
+    void Actor::UpdatePhysicsTransform()
+    {
+        if(mPhysicsBody)
+        {
+            float _physicsScale = PhysicsSystem::Get().GetPhysicsScale();
+            b2Vec2 _pos{GetActorLocation().x * _physicsScale, GetActorLocation().y * _physicsScale};
+            float _rotation = DegreesToRadians(GetActorRotation());
+
+            mPhysicsBody->SetTransform(_pos, _rotation);
+        }
+    }
+
+    void Actor::OnActorBeginOverlap(Actor *other_)
+    {
+        // LOG("Overlapped");
+    }
+
+    void Actor::OnActorEndOverlap(Actor *other_)
+    {
+        // LOG("Overlapped finsish");
+    }
+
+    void Actor::Destroy()
+    {
+        UnInitializedPhysics();
+        Object::Destroy();
+    }
+
+    bool Actor::IsOtherHostile(Actor* other_) const
+    {
+        if(GetTeamID() == GetNeutralTeamID() || other_->GetTeamID() == GetNeutralTeamID())
+        {
+            return false;
+        }
+   
+        return GetTeamID() != other_->GetTeamID();
+    }
+
+    void Actor::ApplyDamage(float amt_)
+    {
+        
+    }
+
+
     Actor::~Actor()
     {
-        LOG("Actor Destroyed");
+        // LOG("Actor Destroyed");
     }
 
 }
