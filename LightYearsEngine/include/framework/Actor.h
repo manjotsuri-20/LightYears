@@ -50,7 +50,7 @@ namespace ly
 
             World* GetWorld() { return mOwningWorld; }
 
-            bool IsActorOutOfWindowBounds() const;
+            bool IsActorOutOfWindowBounds(float allowance_ = 10.f) const;
 
             void SetEnablePhysics(bool enable_);
 
