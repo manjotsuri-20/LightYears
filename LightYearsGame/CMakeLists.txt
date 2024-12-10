@@ -1,5 +1,8 @@
 add_executable(${LIGHT_YEARS_GAME_TARGET_NAME}
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Enemy/VanguardStage.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Enemy/VanguardStage.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/include/Level/GameLevelOne.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Level/GameLevelOne.cpp
 
