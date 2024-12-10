@@ -1,6 +1,9 @@
 #include "player/PlayerSpaceship.h"
 #include "SFML/System.hpp"
 #include "framework/MathUtility.h"
+#include "weapon/BulletShooter.h"
+#include "weapon/ThreeWayShooter.h"
+#include "weapon/FrontalWiper.h"
 
 namespace ly
 {
@@ -8,7 +11,7 @@ namespace ly
         :Spaceship{owningWorld_, path_},
         mMoveInput{},
         mSpeed(200.f),
-        mShooter{new BulletShooter{this, 0.15f, {50.f, 0.f}}}
+        mShooter{new FrontalWiper{this, 0.15f, {50.f, 0.f}}}
     {
         SetTeamID(1);
     }
