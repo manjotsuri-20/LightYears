@@ -20,9 +20,9 @@ namespace ly
 
     void GameStage::FinishStage()
     {
-        onStageFinished.Broadcast();
         mStageFinished = true;
         StageFinished();
+        onStageFinished.Broadcast();
     }
 
     void GameStage::StageFinished()

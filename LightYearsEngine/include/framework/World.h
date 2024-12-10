@@ -41,10 +41,11 @@ namespace ly
             List<shared<Actor>> mActors;
             List<shared<Actor>> mPendingActors;
             List<shared<GameStage>> mGameStages;
-            int mCurrentStageIndex;
+            List<shared<GameStage>>::iterator mCurrentStage;
             virtual void InitGameStages();
             virtual void AllGameStageFinished();
             void NextGameStage();
+            void StartStages();
     };
 
     template<typename ActorType, typename... Args>

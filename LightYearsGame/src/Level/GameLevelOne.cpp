@@ -4,6 +4,8 @@
 #include "framework/TimerManager.h"
 #include "gameplay/GameStage.h"
 #include "Enemy/VanguardStage.h"
+#include "Enemy/TwinBladeStage.h"
+#include "gameplay/WaitStage.h"
 
 namespace ly
 {
@@ -11,9 +13,8 @@ namespace ly
         : World{owningApp}
     {
         testPlayerSpaceship = SpawnActor<PlayerSpaceship>();
-        // testPlayerSpaceship.lock()->SetTexture(GetResourceDir() + "SpaceShooterRedux/PNG/playerShip1_blue.png");
         testPlayerSpaceship.lock()->SetActorLocation(sf::Vector2f(300.f, 490.f));
-        // testPlayerSpaceship.lock()->SetActorRotation(-90.f);
+        testPlayerSpaceship.lock()->SetActorRotation(-90.f);
 
     }
 
@@ -23,7 +24,10 @@ namespace ly
 
     void GameLevelOne::InitGameStages()
     {
+        AddStage(shared<WaitStage>{new WaitStage{this, 5.f}});
         AddStage(shared<VanguardStage>{new VanguardStage{this}});
+        AddStage(shared<WaitStage>{new WaitStage{this, 10.f}});
+        AddStage(shared<TwinBladeStage>{new TwinBladeStage{this}});
     }
 } // namespace ly
 
