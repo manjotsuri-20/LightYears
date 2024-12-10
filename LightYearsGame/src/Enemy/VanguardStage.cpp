@@ -12,7 +12,7 @@ namespace ly
         mLeftSpawnLoc{0.0f, 0.0f},
         mRightSpawnLoc{0.0f, 0.0f},
         mSpawnLoc{0.0f, 0.0f},
-        mRowsToSpawn{4},
+        mRowsToSpawn{2},
         mRowSpawnCount{0},
         mVanguardsPerRow{5},
         mCurrentRowVanguardCount{0}
@@ -29,9 +29,9 @@ namespace ly
     
     void VanguardStage::SpawnVanguard()
     {
-        weak<Vanguard> newVanguard_ = GetWorld()->SpawnActor<Vanguard>();
-        newVanguard_.lock()->SetActorLocation(mSpawnLoc);
-        newVanguard_.lock()->SetActorRotation(90.f);
+        weak<Vanguard> _newVanguard = GetWorld()->SpawnActor<Vanguard>();
+        _newVanguard.lock()->SetActorLocation(mSpawnLoc);
+        _newVanguard.lock()->SetActorRotation(90.f);
         ++mCurrentRowVanguardCount;
 
         if(mCurrentRowVanguardCount == mVanguardsPerRow)

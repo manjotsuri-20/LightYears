@@ -12,7 +12,7 @@ namespace ly
     void EnemySpaceship::Tick(float deltatTime_)
     {
         Spaceship::Tick(deltatTime_);
-        if(IsActorOutOfWindowBounds(GetActorGlobalBounds().width))
+        if(IsActorOutOfWindowBounds(GetActorGlobalBounds().width * 2.f))
         {
             Destroy();
         }
