@@ -76,6 +76,8 @@ namespace ly
 
             const sf::Sprite& GetSprite() const { return mSprite; }
 
+            Delegate<Actor*> onActorDestroy;
+
             virtual ~Actor();
 
         private:

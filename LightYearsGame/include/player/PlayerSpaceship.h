@@ -13,6 +13,7 @@ namespace ly
             float GetSpeed() const;
             void ClampInputOnEdge();
             virtual void Shoot() override;
+            void SetShooter(unique<Shooter>&& newShooter_);
 
         private:
             void HandleInput();

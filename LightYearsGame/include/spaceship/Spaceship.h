@@ -15,13 +15,15 @@ namespace ly
             virtual void BeginPlay() override;
 
             virtual void ApplyDamage(float amt_) override;
+            HealthComponent& GetHealthComp() { return mHeathComponent; }
 
         private:
             void Blink();
             void UpdateBlink(float deltaTime_);
             virtual void OnHeatlhChanged(float amt_, float health_, float maxHealth_);
             virtual void OnTakenDamage(float amt_, float health_, float maxHealth_);
-            virtual void Blow();
+            void Blow();
+            virtual void Blew(); 
             sf::Vector2f mVelocity;
             HealthComponent mHeathComponent;
             

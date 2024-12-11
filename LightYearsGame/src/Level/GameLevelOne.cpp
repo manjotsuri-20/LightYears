@@ -1,6 +1,4 @@
 #include "Level/GameLevelOne.h"
-#include "Enemy/Vanguard.h"
-#include "player/PlayerSpaceship.h"
 #include "framework/TimerManager.h"
 #include "gameplay/GameStage.h"
 #include "Enemy/VanguardStage.h"
@@ -8,20 +6,33 @@
 #include "gameplay/WaitStage.h"
 #include "Enemy/HexagonStage.h"
 #include "Enemy/UFOStage.h"
+#include "player/Player.h"
+#include "player/PlayerManager.h"
 
 namespace ly
 {
     GameLevelOne::GameLevelOne(Application* owningApp)
         : World{owningApp}
-    {
-        testPlayerSpaceship = SpawnActor<PlayerSpaceship>();
-        testPlayerSpaceship.lock()->SetActorLocation(sf::Vector2f(300.f, 490.f));
-        testPlayerSpaceship.lock()->SetActorRotation(-90.f);
-
-    }
+    {}
 
     void GameLevelOne::BeginPlay()
     {
+        Player _newPlayer = PlayerManager::Get().CreateNewPlayer();
+        mPlayerSpaceship = _newPlayer.SpawnPlayerSpaceship(this);
+        mPlayerSpaceship.lock()->onActorDestroy.BindAction(GetWeakRef(), &GameLevelOne::PlayerSpaceshipDestroyed);
+    }
+
+    void GameLevelOne::PlayerSpaceshipDestroyed(Actor* destroyedPlayerSpaceship)
+    {
+        mPlayerSpaceship = PlayerManager::Get().GetPlayer()->SpawnPlayerSpaceship(this);
+        if(!mPlayerSpaceship.expired())
+        {
+            mPlayerSpaceship.lock()->onActorDestroy.BindAction(GetWeakRef(), &GameLevelOne::PlayerSpaceshipDestroyed);
+        }
+        else
+        {
+            GameOver();
+        }
     }
 
     void GameLevelOne::InitGameStages()
@@ -38,5 +49,11 @@ namespace ly
         AddStage(shared<WaitStage>{new WaitStage{this, 10.f}});
         AddStage(shared<UFOStage>{new UFOStage{this}});
     }
+
+    void GameLevelOne::GameOver()
+    {
+        LOG("GameOver");
+    }
+    
 } // namespace ly
 

@@ -13,6 +13,10 @@ namespace ly
             virtual bool IsOnCoolDown() const;
             Actor* GetOwner() const;
 
+            int GetCurrentLevel() const { return mCurrentLevel; }
+            int GetMaxlevel() const { return mMaxLevel; }
+            virtual void IncrementLevel(int amt_ = 1);
+
         protected:
             Shooter(Actor* owner_);
 
@@ -20,5 +24,7 @@ namespace ly
             virtual void ShootImpl() = 0;
             Actor* mOwner;
 
+            int mCurrentLevel;
+            int mMaxLevel;
     };
 } // namespace ly

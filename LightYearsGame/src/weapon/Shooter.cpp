@@ -26,9 +26,17 @@ namespace ly
     }
 
     Shooter::Shooter(Actor *owner_)
-        : mOwner(owner_)
+        : mOwner(owner_),
+        mCurrentLevel{1},
+        mMaxLevel{4}
     {
 
+    }
+
+    void Shooter::IncrementLevel(int amt_)
+    {
+        if(mCurrentLevel == mMaxLevel) return;
+        ++mCurrentLevel;
     }
 } // namespace ly
 

@@ -18,7 +18,7 @@ namespace ly
 
     bool BulletShooter::IsOnCoolDown() const
     {
-        if(mCooldownClock.getElapsedTime().asSeconds() > mCoolDownTime)
+        if(mCooldownClock.getElapsedTime().asSeconds() > mCoolDownTime / GetCurrentLevel())
         {
             return false;
         }
@@ -41,4 +41,10 @@ namespace ly
         newBullet.lock()->SetActorRotation(GetOwner()->GetActorRotation() + mLocalRotationOffset);
         // LOG("Shooting!");
     }
+
+    void BulletShooter::IncrementLevel(int amt_)
+    {
+        Shooter::IncrementLevel(amt_);
+    }
+
 } // namespace ly
