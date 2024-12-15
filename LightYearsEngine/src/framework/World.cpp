@@ -3,6 +3,7 @@
 #include "framework/Actor.h"
 #include "framework/Application.h"
 #include "gameplay/GameStage.h"
+#include "widgets/HUD.h"
 
 namespace ly
 {
@@ -46,12 +47,30 @@ namespace ly
         }
 
         Tick(deltaTime_);
+
+        if(mHUD)
+        {
+            if(!mHUD->HasInit())
+            {
+                mHUD->NativeInit(mOwningApp->GetWindow());
+            }
+            mHUD->Tick(deltaTime_);
+        }
     }
 
     World::~World()
     {
         LOG("World Destroyed");
     }
+
+    void World::RenderHUD(sf::RenderWindow& window_)
+    {
+        if(mHUD)
+        {
+            mHUD->Draw(window_);
+        }
+    }
+
 
     void World::BeginPlay()
     {
@@ -99,6 +118,7 @@ namespace ly
         {
             actor->Render(window_);
         }
+        RenderHUD(window_);
     }
 
     sf::Vector2u World::GetWindowSize() const
@@ -124,5 +144,14 @@ namespace ly
     void World::AddStage(const shared<GameStage> &newStage_)
     {
         mGameStages.push_back(newStage_);
+    }
+
+    bool World::DispatchEvent(const sf::Event &event_)
+    {
+        if(mHUD)
+        {
+            return mHUD->HandleEvent(event_);
+        }
+        return false;
     }
 }

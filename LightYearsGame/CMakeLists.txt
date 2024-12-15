@@ -1,5 +1,8 @@
 add_executable(${LIGHT_YEARS_GAME_TARGET_NAME}
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/widgets/GameplayHUD.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/GameplayHUD.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/include/player/PlayerManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/player/PlayerManager.cpp
 

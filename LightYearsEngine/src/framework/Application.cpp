@@ -9,9 +9,9 @@ namespace ly
 {
     Application::Application(unsigned int windowWidth, unsigned int windowHeight, const std::string& title, sf::Uint32 style)
         : mWindow{sf::VideoMode(windowWidth, windowHeight), title, style},
-        mTargetFrameRate{60.f},
+        mTargetFrameRate{120.f},
         mTickClock{},
-        currentWorld{nullptr},
+        mCurrentWorld{nullptr},
         mCleanCycleClock{sf::Clock{}},
         mCleanCycleInterval{2.f}
     {
@@ -33,12 +33,16 @@ namespace ly
                 {
                     mWindow.close();
                 }
+                else
+                {
+                    DispatchEvent(_windowEvent);
+                }
             }
             _accumulatedTime += mTickClock.restart().asSeconds();
             if(_accumulatedTime > _targetDeltaTime)
             {
+                TickInternal(_accumulatedTime); //pass accumulated time instead of delta time so as to run the loop according to the actual time passed
                 _accumulatedTime -= _targetDeltaTime;
-                TickInternal(_targetDeltaTime);
                 RenderInternal();
             }
         }
@@ -53,9 +57,9 @@ namespace ly
     {
         Tick(deltaTime_);
 
-        if(currentWorld)
+        if(mCurrentWorld)
         {
-            currentWorld->TickInternal(deltaTime_);
+            mCurrentWorld->TickInternal(deltaTime_);
         }
 
         TimerManager::Get().UpdateTimer(deltaTime_);
@@ -66,9 +70,9 @@ namespace ly
         {
             mCleanCycleClock.restart();
             AssetManager::Get().CleanCycle();
-            if(currentWorld)
+            if(mCurrentWorld)
             {
-                currentWorld->CleanCycle();
+                mCurrentWorld->CleanCycle();
             }
         }
     }
@@ -84,15 +88,23 @@ namespace ly
 
     void Application::Render()
     {
-        if(currentWorld)
+        if(mCurrentWorld)
         {
-            currentWorld->Render(mWindow);
+            mCurrentWorld->Render(mWindow);
         }
     }
 
     void Application::Tick(float deltaTime_)
     {
         // LOG("ticking at frame rate: %f", 1.f / deltaTime_);
+    }
+
+    bool Application::DispatchEvent(const sf::Event& event_)
+    {
+        if(mCurrentWorld)
+        {
+            return mCurrentWorld->DispatchEvent(event_);
+        }
     }
 
     Application::~Application()

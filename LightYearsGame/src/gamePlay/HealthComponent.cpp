@@ -52,6 +52,8 @@ namespace ly
             mHealth = mMaxHealth;
         }
 
+        onHealthChanged.Broadcast(amt_, mHealth, mMaxHealth);
+        
         if(amt_ < 0)
         {
             TakenDamage(amt_);
@@ -60,7 +62,6 @@ namespace ly
                 HealthEmpty();
             }
         }
-        onHealthChanged.Broadcast(amt_, mHealth, mMaxHealth);
     }
     
 
