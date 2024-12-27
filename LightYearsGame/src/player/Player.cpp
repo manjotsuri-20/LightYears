@@ -43,7 +43,7 @@ namespace ly
     {
         if(amt_ > 0)
         {
-            mScore = amt_;
+            mScore += amt_;
             onScoreChange.Broadcast(mScore);
         }
     }

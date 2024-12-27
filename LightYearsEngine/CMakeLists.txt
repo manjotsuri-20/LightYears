@@ -1,5 +1,8 @@
 add_library(${LIGHT_YEARS_ENGINE_TARGET_NAME} STATIC
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/widgets/ImageWidget.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/ImageWidget.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/include/widgets/ValueGauge.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/ValueGauge.cpp
 

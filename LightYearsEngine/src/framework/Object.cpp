@@ -2,8 +2,10 @@
 
 namespace ly
 {
+    unsigned int  Object::uniqueIdCounter{0};
     Object::Object()
-        : mIsPendingDestroy(false)
+        : mIsPendingDestroy(false),
+        mUniqueID{GetNextAvailableId()}
     {
 
     }
@@ -27,5 +29,10 @@ namespace ly
     weak<const Object> Object::GetWeakRef() const
     {
         return weak_from_this();
+    }
+
+    unsigned int Object::GetNextAvailableId()
+    {
+        return uniqueIdCounter++;
     }
 }
