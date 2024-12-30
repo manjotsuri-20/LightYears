@@ -1,27 +1,24 @@
-#include <box2d/b2_body.h>
 #include "framework/Actor.h"
+
+#include <box2d/b2_body.h>
+
+#include "framework/AssetManager.h"
 #include "framework/Core.h"
 #include "framework/MathUtility.h"
-#include "framework/World.h"
 #include "framework/PhysicsSystem.h"
+#include "framework/World.h"
 
 namespace ly
 {
     Actor::Actor(World* owningWorld, const std::string& texturePath_)
-        : mOwningWorld(owningWorld), 
-        mHasBeganPlay(false),
-        mSprite{},
-        mTexture{},
-        mPhysicsBody{nullptr},
-        mPhysicsEnable{false},
-        mTeamID{GetNeutralTeamID()}
+        : mOwningWorld(owningWorld), mHasBeganPlay(false), mSprite{}, mTexture{}, mPhysicsBody{nullptr}, mPhysicsEnable{false}, mTeamID{GetNeutralTeamID()}
     {
         SetTexture(texturePath_);
     }
 
     void Actor::BeginPlayInternal()
     {
-        if(!mHasBeganPlay)
+        if (!mHasBeganPlay)
         {
             mHasBeganPlay = true;
             BeginPlay();
@@ -30,7 +27,7 @@ namespace ly
 
     void Actor::TickInternal(float deltaTime_)
     {
-        if(!IsPendingDestroy())
+        if (!IsPendingDestroy())
         {
             Tick(deltaTime_);
         }
@@ -49,7 +46,7 @@ namespace ly
     void Actor::SetTexture(const std::string& texturePath_)
     {
         mTexture = AssetManager::Get().LoadTexture(texturePath_);
-        if(!mTexture) return;
+        if (!mTexture) return;
         mSprite.setTexture(*mTexture);
 
         int _textureWidth = mTexture->getSize().x;
@@ -60,7 +57,7 @@ namespace ly
 
     void Actor::Render(sf::RenderWindow& window_)
     {
-        if(IsPendingDestroy())
+        if (IsPendingDestroy())
         {
             return;
         }
@@ -79,7 +76,7 @@ namespace ly
         UpdatePhysicsTransform();
     }
 
-    void Actor::AddActorLocationOffset(const sf::Vector2f &offsetAmt_)
+    void Actor::AddActorLocationOffset(const sf::Vector2f& offsetAmt_)
     {
         SetActorLocation(GetActorLocation() + offsetAmt_);
     }
@@ -122,20 +119,20 @@ namespace ly
     void Actor::CentrePivot()
     {
         sf::FloatRect _bound = mSprite.getGlobalBounds();
-        mSprite.setOrigin(_bound.width/2.f, _bound.height/2.f);
+        mSprite.setOrigin(_bound.width / 2.f, _bound.height / 2.f);
     }
 
     void Actor::InitializePhysics()
     {
-        if(!mPhysicsBody)
+        if (!mPhysicsBody)
         {
             mPhysicsBody = PhysicsSystem::Get().AddListener(this);
         }
     }
-            
+
     void Actor::UnInitializedPhysics()
     {
-        if(mPhysicsBody)
+        if (mPhysicsBody)
         {
             PhysicsSystem::Get().RemoveListener(mPhysicsBody);
             mPhysicsBody = nullptr;
@@ -157,20 +154,20 @@ namespace ly
 
         sf::Vector2f _actorPosition = GetActorLocation();
 
-        if(_actorPosition.x < -_width - allowance_)
+        if (_actorPosition.x < -_width - allowance_)
         {
             return true;
         }
-        if(_actorPosition.x > _windowWidth + _width + allowance_)
+        if (_actorPosition.x > _windowWidth + _width + allowance_)
         {
             return true;
         }
 
-        if(_actorPosition.y < -_height - allowance_)
+        if (_actorPosition.y < -_height - allowance_)
         {
             return true;
         }
-        if(_actorPosition.y > _windowHeight + _height + allowance_)
+        if (_actorPosition.y > _windowHeight + _height + allowance_)
         {
             return true;
         }
@@ -180,7 +177,7 @@ namespace ly
     void Actor::SetEnablePhysics(bool enable_)
     {
         mPhysicsEnable = enable_;
-        if(mPhysicsEnable)
+        if (mPhysicsEnable)
         {
             InitializePhysics();
         }
@@ -192,7 +189,7 @@ namespace ly
 
     void Actor::UpdatePhysicsTransform()
     {
-        if(mPhysicsBody)
+        if (mPhysicsBody)
         {
             float _physicsScale = PhysicsSystem::Get().GetPhysicsScale();
             b2Vec2 _pos{GetActorLocation().x * _physicsScale, GetActorLocation().y * _physicsScale};
@@ -202,12 +199,12 @@ namespace ly
         }
     }
 
-    void Actor::OnActorBeginOverlap(Actor *other_)
+    void Actor::OnActorBeginOverlap(Actor* other_)
     {
         // LOG("Overlapped");
     }
 
-    void Actor::OnActorEndOverlap(Actor *other_)
+    void Actor::OnActorEndOverlap(Actor* other_)
     {
         // LOG("Overlapped finsish");
     }
@@ -221,26 +218,22 @@ namespace ly
 
     bool Actor::IsOtherHostile(Actor* other_) const
     {
-        if(other_ == nullptr) return false;
+        if (other_ == nullptr) return false;
 
-        if(GetTeamID() == GetNeutralTeamID() || other_->GetTeamID() == GetNeutralTeamID())
+        if (GetTeamID() == GetNeutralTeamID() || other_->GetTeamID() == GetNeutralTeamID())
         {
             return false;
         }
-   
+
         return GetTeamID() != other_->GetTeamID();
     }
 
     void Actor::ApplyDamage(float amt_)
     {
-        
     }
-
 
     Actor::~Actor()
     {
         // LOG("Actor Destroyed");
     }
-
-}
-
+}  // namespace ly

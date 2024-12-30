@@ -1,8 +1,8 @@
 #pragma once
-#include "framework/Object.h"
 #include <SFML/Graphics.hpp>
+
 #include "framework/Core.h"
-#include "framework/AssetManager.h"
+#include "framework/Object.h"
 
 class b2Body;
 namespace ly
@@ -11,7 +11,6 @@ namespace ly
     class Actor : public Object
     {
         public:
-
             Actor(World* owningWorld, const std::string& texturePath_ = "");
 
             void BeginPlayInternal();
@@ -48,7 +47,10 @@ namespace ly
 
             const World* GetWorld() const;
 
-            World* GetWorld() { return mOwningWorld; }
+            World* GetWorld()
+            {
+                return mOwningWorld;
+            }
 
             bool IsActorOutOfWindowBounds(float allowance_ = 10.f) const;
 
@@ -62,26 +64,40 @@ namespace ly
 
             virtual void Destroy() override;
 
-            static uint8 GetNeutralTeamID() { return neutralTeamID; }
+            static uint8 GetNeutralTeamID()
+            {
+                return neutralTeamID;
+            }
 
-            uint8 GetTeamID() const { return mTeamID; }
+            uint8 GetTeamID() const
+            {
+                return mTeamID;
+            }
 
             bool IsOtherHostile(Actor* other_) const;
 
-            void SetTeamID(uint8 teamId_) { mTeamID = teamId_; }
+            void SetTeamID(uint8 teamId_)
+            {
+                mTeamID = teamId_;
+            }
 
             virtual void ApplyDamage(float amt_);
 
-            sf::Sprite& GetSprite() { return mSprite; }
+            sf::Sprite& GetSprite()
+            {
+                return mSprite;
+            }
 
-            const sf::Sprite& GetSprite() const { return mSprite; }
+            const sf::Sprite& GetSprite() const
+            {
+                return mSprite;
+            }
 
             Delegate<Actor*> onActorDestroy;
 
             virtual ~Actor();
 
         private:
-
             void InitializePhysics();
             void UnInitializedPhysics();
             void CentrePivot();
@@ -91,7 +107,7 @@ namespace ly
 
             sf::Sprite mSprite;
             shared<sf::Texture> mTexture;
-            
+
             b2Body* mPhysicsBody;
             bool mPhysicsEnable;
 
@@ -99,4 +115,4 @@ namespace ly
 
             const static uint8 neutralTeamID = 255;
     };
-}
+}  // namespace ly

@@ -1,5 +1,11 @@
 add_executable(${LIGHT_YEARS_GAME_TARGET_NAME}
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Level/MainMenuLevel.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Level/MainMenuLevel.cpp
+    
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/widgets/MainMenuHUD.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/MainMenuHUD.cpp
+    
     ${CMAKE_CURRENT_SOURCE_DIR}/include/widgets/GameplayHUD.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/GameplayHUD.cpp
 

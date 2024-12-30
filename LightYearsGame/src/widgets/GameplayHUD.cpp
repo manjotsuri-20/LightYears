@@ -1,4 +1,5 @@
 #include "widgets/GameplayHUD.h"
+
 #include "player/Player.h"
 #include "player/PlayerManager.h"
 #include "player/PlayerSpaceship.h"
@@ -6,23 +7,23 @@
 namespace ly
 {
     GameplayHUD::GameplayHUD()
-        : mFramerateText{"Frame Rate:"},
-        mPlayerHealthBar{},
-        mPlayerLifeIcon{"SpaceShooterRedux/PNG/pickups/playerLife1_blue.png"},
-        mPlayerLifeText{""},
-        mPlayerScoreIcon{"SpaceShooterRedux/PNG/Power-ups/star_gold.png"},
-        mPlayerScoreText{""},
-        mHealthyHealthBarColor{128, 255, 128, 255},
-        mCriticalHealthBarColor{128, 0, 0, 255},
-        mCriticalThreshould{0.3f},
-        mWidgetSpacing{10.f}
+        : mFramerateText{"Frame Rate:"}
+        , mPlayerHealthBar{}
+        , mPlayerLifeIcon{"SpaceShooterRedux/PNG/pickups/playerLife1_blue.png"}
+        , mPlayerLifeText{""}
+        , mPlayerScoreIcon{"SpaceShooterRedux/PNG/Power-ups/star_gold.png"}
+        , mPlayerScoreText{""}
+        , mHealthyHealthBarColor{128, 255, 128, 255}
+        , mCriticalHealthBarColor{128, 0, 0, 255}
+        , mCriticalThreshould{0.3f}
+        , mWidgetSpacing{10.f}
     {
         mFramerateText.SetTextSize(30);
         mPlayerLifeText.SetTextSize(20);
         mPlayerScoreText.SetTextSize(20);
     }
 
-    void GameplayHUD::Draw(sf::RenderWindow &windowRef_)
+    void GameplayHUD::Draw(sf::RenderWindow& windowRef_)
     {
         mFramerateText.NativeDraw(windowRef_);
         mPlayerHealthBar.NativeDraw(windowRef_);
@@ -39,7 +40,7 @@ namespace ly
         mFramerateText.SetString(_frameRateString);
     }
 
-    void GameplayHUD::Init(const sf::RenderWindow &windowRef_)
+    void GameplayHUD::Init(const sf::RenderWindow& windowRef_)
     {
         auto _windowSize = windowRef_.getSize();
         mPlayerHealthBar.SetWidgetLocation(sf::Vector2f{10.f, _windowSize.y - 50.f});
@@ -76,7 +77,7 @@ namespace ly
         mPlayerScoreText.SetString(std::to_string(newScore_));
     }
 
-    void GameplayHUD::PlayerSpaceshipDestroyed(Actor *actor_)
+    void GameplayHUD::PlayerSpaceshipDestroyed(Actor* actor_)
     {
         RefreshHealthBar();
     }
@@ -84,7 +85,7 @@ namespace ly
     void GameplayHUD::RefreshHealthBar()
     {
         Player* _player = PlayerManager::Get().GetPlayer();
-        if(_player && !_player->GetCurrentSpaceship().expired())
+        if (_player && !_player->GetCurrentSpaceship().expired())
         {
             weak<PlayerSpaceship> _playerSpaceship = _player->GetCurrentSpaceship();
             _playerSpaceship.lock()->onActorDestroy.BindAction(GetWeakRef(), &GameplayHUD::PlayerSpaceshipDestroyed);
@@ -98,7 +99,7 @@ namespace ly
     void GameplayHUD::ConnectPlayerStatus()
     {
         Player* _player = PlayerManager::Get().GetPlayer();
-        if(_player)
+        if (_player)
         {
             int _lifeCount = _player->GetLifeCount();
             mPlayerLifeText.SetString(std::to_string(_lifeCount));
@@ -113,7 +114,7 @@ namespace ly
     void GameplayHUD::UpdateHealthBar(float currHealth_, float maxHealth_)
     {
         mPlayerHealthBar.UpdateValue(currHealth_, maxHealth_);
-        if(currHealth_ / maxHealth_ < mCriticalThreshould)
+        if (currHealth_ / maxHealth_ < mCriticalThreshould)
         {
             mPlayerHealthBar.SetForegroundColor(mCriticalHealthBarColor);
         }
@@ -122,5 +123,9 @@ namespace ly
             mPlayerHealthBar.SetForegroundColor(mHealthyHealthBarColor);
         }
     }
-} // namespace ly
 
+    bool GameplayHUD::HandleEvent(const sf::Event& event_)
+    {
+        return HUD::HandleEvent(event_);
+    }
+}  // namespace ly

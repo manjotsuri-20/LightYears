@@ -1,8 +1,9 @@
 #pragma once
+#include "widgets/Button.h"
 #include "widgets/HUD.h"
+#include "widgets/ImageWidget.h"
 #include "widgets/TextWidget.h"
 #include "widgets/ValueGauge.h"
-#include "widgets/ImageWidget.h"
 
 namespace ly
 {
@@ -13,6 +14,7 @@ namespace ly
             GameplayHUD();
             virtual void Draw(sf::RenderWindow& windowRef_) override;
             virtual void Tick(float deltaTime_) override;
+            virtual bool HandleEvent(const sf::Event& event_) override;
 
         private:
             virtual void Init(const sf::RenderWindow& windowRef_) override;
@@ -37,4 +39,4 @@ namespace ly
             float mWidgetSpacing;
     };
 
-} // namespace ly
+}  // namespace ly

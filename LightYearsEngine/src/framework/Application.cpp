@@ -1,37 +1,36 @@
 #include "framework/Application.h"
-#include "framework/Core.h"
-#include "framework/World.h"
+
 #include "framework/AssetManager.h"
+#include "framework/Core.h"
 #include "framework/PhysicsSystem.h"
 #include "framework/TimerManager.h"
+#include "framework/World.h"
 
 namespace ly
 {
     Application::Application(unsigned int windowWidth, unsigned int windowHeight, const std::string& title, sf::Uint32 style)
-        : mWindow{sf::VideoMode(windowWidth, windowHeight), title, style},
-        mTargetFrameRate{120.f},
-        mTickClock{},
-        mCurrentWorld{nullptr},
-        mCleanCycleClock{sf::Clock{}},
-        mCleanCycleInterval{2.f}
+        : mWindow{sf::VideoMode(windowWidth, windowHeight), title, style}
+        , mTargetFrameRate{120.f}
+        , mTickClock{}
+        , mCurrentWorld{nullptr}
+        , mCleanCycleClock{sf::Clock{}}
+        , mCleanCycleInterval{2.f}
     {
-
     }
-
 
     void Application::Run()
     {
         mTickClock.restart();
         float _accumulatedTime{0.f};
         float _targetDeltaTime{1.f / mTargetFrameRate};
-        while(mWindow.isOpen())
+        while (mWindow.isOpen())
         {
             sf::Event _windowEvent;
-            if(mWindow.pollEvent(_windowEvent))
+            if (mWindow.pollEvent(_windowEvent))
             {
-                if(_windowEvent.type == sf::Event::EventType::Closed)
+                if (_windowEvent.type == sf::Event::EventType::Closed)
                 {
-                    mWindow.close();
+                    QuitApplication();
                 }
                 else
                 {
@@ -39,9 +38,9 @@ namespace ly
                 }
             }
             _accumulatedTime += mTickClock.restart().asSeconds();
-            if(_accumulatedTime > _targetDeltaTime)
+            if (_accumulatedTime > _targetDeltaTime)
             {
-                TickInternal(_accumulatedTime); //pass accumulated time instead of delta time so as to run the loop according to the actual time passed
+                TickInternal(_accumulatedTime);  // pass accumulated time instead of delta time so as to run the loop according to the actual time passed
                 _accumulatedTime -= _targetDeltaTime;
                 RenderInternal();
             }
@@ -57,7 +56,7 @@ namespace ly
     {
         Tick(deltaTime_);
 
-        if(mCurrentWorld)
+        if (mCurrentWorld)
         {
             mCurrentWorld->TickInternal(deltaTime_);
         }
@@ -66,14 +65,20 @@ namespace ly
 
         PhysicsSystem::Get().Step(deltaTime_);
 
-        if(mCleanCycleClock.getElapsedTime().asSeconds() >= mCleanCycleInterval)
+        if (mCleanCycleClock.getElapsedTime().asSeconds() >= mCleanCycleInterval)
         {
             mCleanCycleClock.restart();
             AssetManager::Get().CleanCycle();
-            if(mCurrentWorld)
+            if (mCurrentWorld)
             {
                 mCurrentWorld->CleanCycle();
             }
+        }
+
+        if (mPendingWorld && mPendingWorld != mCurrentWorld)
+        {
+            mCurrentWorld = mPendingWorld;
+            mCurrentWorld->BeginPlayInternal();
         }
     }
 
@@ -82,13 +87,13 @@ namespace ly
         mWindow.clear();
 
         Render();
-        
+
         mWindow.display();
     }
 
     void Application::Render()
     {
-        if(mCurrentWorld)
+        if (mCurrentWorld)
         {
             mCurrentWorld->Render(mWindow);
         }
@@ -101,7 +106,7 @@ namespace ly
 
     bool Application::DispatchEvent(const sf::Event& event_)
     {
-        if(mCurrentWorld)
+        if (mCurrentWorld)
         {
             return mCurrentWorld->DispatchEvent(event_);
         }
@@ -112,4 +117,9 @@ namespace ly
         LOG("Application destroyed");
     }
 
-} // namespace ly
+    void Application::QuitApplication()
+    {
+        mWindow.close();
+    }
+
+}  // namespace ly

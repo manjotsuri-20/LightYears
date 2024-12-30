@@ -1,7 +1,4 @@
 #include "framework/Application.h"
-#include "framework/Core.h"
-#include "spaceship/Spaceship.h"
-#include "player/PlayerSpaceship.h"
 
 namespace ly
 {
@@ -10,7 +7,7 @@ namespace ly
         public:
             GameApplication();
             ~GameApplication();
-        private:
 
+        private:
     };
-}
+}  // namespace ly

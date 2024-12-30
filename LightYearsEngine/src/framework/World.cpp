@@ -1,25 +1,26 @@
 #include "framework/World.h"
-#include "framework/Core.h"
+
 #include "framework/Actor.h"
 #include "framework/Application.h"
+#include "framework/Core.h"
 #include "gameplay/GameStage.h"
 #include "widgets/HUD.h"
 
 namespace ly
 {
     World::World(Application* owningApp)
-        : mOwningApp(owningApp),
-        mBegunPlay(false),
-        mActors{},
-        mPendingActors{},
-        mGameStages{},
-        mCurrentStage{mGameStages.end()}
+        : mOwningApp(owningApp)
+        , mBegunPlay(false)
+        , mActors{}
+        , mPendingActors{}
+        , mGameStages{}
+        , mCurrentStage{mGameStages.end()}
     {
     }
 
     void World::BeginPlayInternal()
     {
-        if(!mBegunPlay)
+        if (!mBegunPlay)
         {
             mBegunPlay = true;
             BeginPlay();
@@ -30,27 +31,27 @@ namespace ly
 
     void World::TickInternal(float deltaTime_)
     {
-        for(shared<Actor> actor : mPendingActors)
+        for (shared<Actor> actor : mPendingActors)
         {
             mActors.push_back(actor);
             actor->BeginPlayInternal();
         }
         mPendingActors.clear();
-        for(auto iter = mActors.begin(); iter != mActors.end(); iter++)
+        for (auto iter = mActors.begin(); iter != mActors.end(); iter++)
         {
             iter->get()->TickInternal(deltaTime_);
         }
-        
-        if(mCurrentStage != mGameStages.end())
+
+        if (mCurrentStage != mGameStages.end())
         {
             mCurrentStage->get()->TickStage(deltaTime_);
         }
 
         Tick(deltaTime_);
 
-        if(mHUD)
+        if (mHUD)
         {
-            if(!mHUD->HasInit())
+            if (!mHUD->HasInit())
             {
                 mHUD->NativeInit(mOwningApp->GetWindow());
             }
@@ -65,12 +66,11 @@ namespace ly
 
     void World::RenderHUD(sf::RenderWindow& window_)
     {
-        if(mHUD)
+        if (mHUD)
         {
             mHUD->Draw(window_);
         }
     }
-
 
     void World::BeginPlay()
     {
@@ -94,7 +94,7 @@ namespace ly
     void World::NextGameStage()
     {
         mCurrentStage = mGameStages.erase(mCurrentStage);
-        if(mCurrentStage != mGameStages.end())
+        if (mCurrentStage != mGameStages.end())
         {
             mCurrentStage->get()->StartStage();
             mCurrentStage->get()->onStageFinished.BindAction(GetWeakRef(), &World::NextGameStage);
@@ -108,13 +108,16 @@ namespace ly
     void World::StartStages()
     {
         mCurrentStage = mGameStages.begin();
-        mCurrentStage->get()->StartStage();
-        mCurrentStage->get()->onStageFinished.BindAction(GetWeakRef(), &World::NextGameStage);
+        if (mCurrentStage != mGameStages.end())
+        {
+            mCurrentStage->get()->StartStage();
+            mCurrentStage->get()->onStageFinished.BindAction(GetWeakRef(), &World::NextGameStage);
+        }
     }
-    
-    void World::Render(sf::RenderWindow &window_)
+
+    void World::Render(sf::RenderWindow& window_)
     {
-        for(auto& actor : mActors)
+        for (auto& actor : mActors)
         {
             actor->Render(window_);
         }
@@ -125,12 +128,12 @@ namespace ly
     {
         return mOwningApp->GetWindowSize();
     }
-    
+
     void World::CleanCycle()
     {
-        for(auto iter = mActors.begin(); iter != mActors.end(); )
+        for (auto iter = mActors.begin(); iter != mActors.end();)
         {
-            if(iter->get()->IsPendingDestroy())
+            if (iter->get()->IsPendingDestroy())
             {
                 iter = mActors.erase(iter);
             }
@@ -141,17 +144,17 @@ namespace ly
         }
     }
 
-    void World::AddStage(const shared<GameStage> &newStage_)
+    void World::AddStage(const shared<GameStage>& newStage_)
     {
         mGameStages.push_back(newStage_);
     }
 
-    bool World::DispatchEvent(const sf::Event &event_)
+    bool World::DispatchEvent(const sf::Event& event_)
     {
-        if(mHUD)
+        if (mHUD)
         {
             return mHUD->HandleEvent(event_);
         }
         return false;
     }
-}
+}  // namespace ly

@@ -1,10 +1,11 @@
 #pragma once
-#include "framework/Core.h"
-#include "framework/Actor.h"
 #include <SFML/Graphics.hpp>
 
+#include "framework/Actor.h"
+#include "framework/Core.h"
+
 namespace ly
-{   
+{
     class Actor;
     class Application;
     class GameStage;
@@ -12,7 +13,6 @@ namespace ly
     class World : public Object
     {
         public:
-
             World(Application* owningApp);
 
             void BeginPlayInternal();
@@ -21,10 +21,10 @@ namespace ly
 
             virtual ~World();
 
-            template<typename ActorType, typename... Args>
+            template <typename ActorType, typename... Args>
             weak<ActorType> SpawnActor(Args... args_);
 
-            template<typename HUDType, typename... Args>
+            template <typename HUDType, typename... Args>
             weak<HUDType> SpawnHUD(Args... args_);
 
             void Render(sf::RenderWindow& window_);
@@ -36,12 +36,21 @@ namespace ly
 
             bool DispatchEvent(const sf::Event& event_);
 
-        private:
+            Application* GetApplication()
+            {
+                return mOwningApp;
+            }
 
+            const Application* GetApplication() const
+            {
+                return mOwningApp;
+            }
+
+        private:
             void RenderHUD(sf::RenderWindow& window_);
             virtual void BeginPlay();
             virtual void Tick(float deltaTime_);
-            
+
             Application* mOwningApp;
             bool mBegunPlay{false};
 
@@ -58,7 +67,7 @@ namespace ly
             void StartStages();
     };
 
-    template<typename ActorType, typename... Args>
+    template <typename ActorType, typename... Args>
     inline weak<ActorType> World::SpawnActor(Args... args_)
     {
         shared<ActorType> _newActor{new ActorType(this, args_...)};
@@ -66,11 +75,11 @@ namespace ly
         return _newActor;
     }
 
-    template<typename HUDType, typename... Args>
+    template <typename HUDType, typename... Args>
     weak<HUDType> World::SpawnHUD(Args... args_)
     {
         shared<HUDType> _newHUD{new HUDType(args_...)};
         mHUD = _newHUD;
         return _newHUD;
     }
-}
+}  // namespace ly
