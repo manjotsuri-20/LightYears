@@ -1,5 +1,8 @@
 add_executable(${LIGHT_YEARS_GAME_TARGET_NAME}
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Enemy/ChaosStage.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Enemy/ChaosStage.cpp
+    
     ${CMAKE_CURRENT_SOURCE_DIR}/include/Level/MainMenuLevel.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Level/MainMenuLevel.cpp
     
