@@ -1,11 +1,11 @@
 #include "gamePlay/HealthComponent.h"
+
 #include "framework/Core.h"
 
 namespace ly
 {
     HealthComponent::HealthComponent(float health_, float maxHealth_)
-        : mHealth{health_},
-        mMaxHealth{maxHealth_}
+        : mHealth{health_}, mMaxHealth{maxHealth_}
     {
     }
 
@@ -36,33 +36,37 @@ namespace ly
 
     void HealthComponent::ChangeHealth(float amt_)
     {
-        if(amt_ == 0) return;
+        if (amt_ == 0) return;
 
-        if(mHealth == 0) return;
+        if (mHealth == 0) return;
 
         mHealth += amt_;
 
-        if(mHealth < 0)
+        if (mHealth < 0)
         {
             mHealth = 0;
         }
 
-        if(mHealth > mMaxHealth)
+        if (mHealth > mMaxHealth)
         {
             mHealth = mMaxHealth;
         }
 
         onHealthChanged.Broadcast(amt_, mHealth, mMaxHealth);
-        
-        if(amt_ < 0)
+
+        if (amt_ < 0)
         {
             TakenDamage(amt_);
-            if(mHealth <= 0)
+            if (mHealth <= 0)
             {
                 HealthEmpty();
             }
         }
     }
-    
 
-} // namespace ly
+    void HealthComponent::SetInitialHealth(float health_, float maxHealth_)
+    {
+        mHealth = health_;
+        mMaxHealth = maxHealth_;
+    }
+}  // namespace ly

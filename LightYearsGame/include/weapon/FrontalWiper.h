@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+
 #include "weapon/BulletShooter.h"
 
 namespace ly
@@ -10,6 +11,7 @@ namespace ly
             FrontalWiper(Actor* owner_, float coolDownTime_ = 0.3f, const sf::Vector2f& localOffset_ = {0.f, 0.f}, float width_ = 60.f);
 
             virtual void IncrementLevel(int amt_) override;
+            virtual void SetCurrentLevel(int newLevel_) override;
 
         private:
             virtual void ShootImpl() override;
@@ -23,4 +25,4 @@ namespace ly
             BulletShooter mShooter5;
             BulletShooter mShooter6;
     };
-} // namespace ly
+}  // namespace ly

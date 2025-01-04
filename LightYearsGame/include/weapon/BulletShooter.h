@@ -1,7 +1,5 @@
 #pragma once
 #include "weapon/Shooter.h"
-#include "SFML/System.hpp"
-#include "framework/Core.h"
 
 namespace ly
 {
@@ -13,7 +11,7 @@ namespace ly
                 sf::Vector2f localPositionOffset_ = {0.f, 0.f}, 
                 float localRotationOffset_ = 0, 
                 const std::string& bulletTexturePath_ = "SpaceShooterRedux/PNG/Lasers/laserBlue01.png");
-            virtual bool IsOnCoolDown() const;
+            virtual bool IsOnCoolDown() const override;
             virtual void IncrementLevel(int amt_) override;
             void SetBulletTexturePath(const std::string& bulletTexturePath);
 

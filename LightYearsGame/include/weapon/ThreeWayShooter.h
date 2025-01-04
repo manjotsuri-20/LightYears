@@ -1,6 +1,7 @@
 #pragma once
-#include "weapon/BulletShooter.h"
 #include <SFML/Graphics.hpp>
+
+#include "weapon/BulletShooter.h"
 
 namespace ly
 {
@@ -17,8 +18,9 @@ namespace ly
             BulletShooter mTopLevelShooterRight;
 
             virtual void IncrementLevel(int amt_) override;
+            virtual void SetCurrentLevel(int newLevel_) override;
 
         private:
             virtual void ShootImpl() override;
     };
-} // namespace ly
+}  // namespace ly

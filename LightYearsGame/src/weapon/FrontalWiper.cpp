@@ -3,15 +3,16 @@
 namespace ly
 {
     FrontalWiper::FrontalWiper(Actor* owner_, float coolDownTime_, const sf::Vector2f& localOffset_, float width_)
-        : Shooter(owner_),
-        mWidth{width_},
-        mShooter1{owner_, coolDownTime_, {localOffset_.x, localOffset_.y - width_/2.f}, 0.f, "SpaceShooterRedux/PNG/Lasers/laserGreen11.png"},
-        mShooter2{owner_, coolDownTime_, {localOffset_.x, localOffset_.y - width_/6.f}, 0.f, "SpaceShooterRedux/PNG/Lasers/laserBlue07.png"},
-        mShooter3{owner_, coolDownTime_, {localOffset_.x, localOffset_.y + width_/6.f}, 0.f, "SpaceShooterRedux/PNG/Lasers/laserBlue07.png"},
-        mShooter4{owner_, coolDownTime_, {localOffset_.x, localOffset_.y + width_/2.f}, 0.f, "SpaceShooterRedux/PNG/Lasers/laserGreen11.png"},
-        mShooter5{owner_, 0.1f, {localOffset_.x, localOffset_.y + width_/1.5f}, 15.f, "SpaceShooterRedux/PNG/Lasers/laserGreen11.png"},
-        mShooter6{owner_, 0.1f, {localOffset_.x, localOffset_.y - width_/1.5f}, -15.f, "SpaceShooterRedux/PNG/Lasers/laserGreen11.png"}
-    {}
+        : Shooter(owner_)
+        , mWidth{width_}
+        , mShooter1{owner_, coolDownTime_, {localOffset_.x, localOffset_.y - width_ / 2.f}, 0.f, "SpaceShooterRedux/PNG/Lasers/laserGreen11.png"}
+        , mShooter2{owner_, coolDownTime_, {localOffset_.x, localOffset_.y - width_ / 6.f}, 0.f, "SpaceShooterRedux/PNG/Lasers/laserBlue07.png"}
+        , mShooter3{owner_, coolDownTime_, {localOffset_.x, localOffset_.y + width_ / 6.f}, 0.f, "SpaceShooterRedux/PNG/Lasers/laserBlue07.png"}
+        , mShooter4{owner_, coolDownTime_, {localOffset_.x, localOffset_.y + width_ / 2.f}, 0.f, "SpaceShooterRedux/PNG/Lasers/laserGreen11.png"}
+        , mShooter5{owner_, coolDownTime_ / 1.5f, {localOffset_.x, localOffset_.y + width_ / 1.5f}, 15.f, "SpaceShooterRedux/PNG/Lasers/laserGreen11.png"}
+        , mShooter6{owner_, coolDownTime_ / 1.5f, {localOffset_.x, localOffset_.y - width_ / 1.5f}, -15.f, "SpaceShooterRedux/PNG/Lasers/laserGreen11.png"}
+    {
+    }
 
     void FrontalWiper::ShootImpl()
     {
@@ -20,7 +21,7 @@ namespace ly
         mShooter3.Shoot();
         mShooter4.Shoot();
 
-        if(GetCurrentLevel() == GetMaxlevel())
+        if (GetCurrentLevel() == GetMaxlevel())
         {
             mShooter5.Shoot();
             mShooter6.Shoot();
@@ -38,4 +39,16 @@ namespace ly
         mShooter5.IncrementLevel(amt_);
         mShooter6.IncrementLevel(amt_);
     }
-} // namespace ly
+
+    void FrontalWiper::SetCurrentLevel(int newLevel_)
+    {
+        Shooter::SetCurrentLevel(newLevel_);
+        mShooter1.SetCurrentLevel(newLevel_);
+        mShooter2.SetCurrentLevel(newLevel_);
+        mShooter3.SetCurrentLevel(newLevel_);
+        mShooter4.SetCurrentLevel(newLevel_);
+
+        mShooter5.SetCurrentLevel(newLevel_);
+        mShooter6.SetCurrentLevel(newLevel_);
+    }
+}  // namespace ly

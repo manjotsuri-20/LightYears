@@ -23,11 +23,12 @@ namespace ly
 
             virtual void Tick(float deltatTime_) override;
             void SetScoreRewardAmt(unsigned int amt_);
+            void SetRewardSpawnWeight(float weight_);
 
         private:
             void SpawnReward();
             virtual void Blew() override;
-            virtual void OnActorBeginOverlap(Actor* other_);
+            virtual void OnActorBeginOverlap(Actor* other_) override;
             float mCollisionDamage;
             unsigned int mScoreRewardAmt;
             float mRewardSpawnWeight;
