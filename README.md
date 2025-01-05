@@ -15,8 +15,8 @@
 
 3. Build the code inside the build folder
 
-    `cd build/ && rm -rf * && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j5 && cd -`
+    `cd build/ && rm -rf * && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j5`
 
 4. Run the Game
 
-    `cd LightYearsGame && ./../build/LightYearsGame/LightYearsGame & cd -`
+    `cd LightYearsGame && ./LightYearsGame`
