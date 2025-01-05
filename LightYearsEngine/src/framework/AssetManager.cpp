@@ -6,16 +6,16 @@ namespace ly
 
     AssetManager& AssetManager::Get()
     {
-        if(!assetManager)
+        if (!assetManager)
         {
             assetManager = std::move(unique<AssetManager>{new AssetManager});
         }
         return *assetManager;
     }
 
-    AssetManager::AssetManager() : mRootDirectory{}
+    AssetManager::AssetManager()
+        : mRootDirectory{}
     {
-
     }
 
     shared<sf::Texture> AssetManager::LoadTexture(const std::string& path_)
@@ -34,8 +34,8 @@ namespace ly
         CleanUniqueRef(mLoadedFontMap);
     }
 
-    void AssetManager::SetAssetRootDirectory(const std::string &directory_)
+    void AssetManager::SetAssetRootDirectory(const std::string& directory_)
     {
         mRootDirectory = directory_;
     }
-}
+}  // namespace ly

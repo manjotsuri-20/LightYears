@@ -33,5 +33,9 @@ namespace ly
     using uint8 = unsigned char;
 
     //MACRO
-    #define LOG(M, ...) printf(M "\n", ##__VA_ARGS__)
+    #ifdef NDEBUG
+        #define LOG(M, ...)
+    #else
+        #define LOG(M, ...) printf(M "\n", ##__VA_ARGS__)
+    #endif // DEBUG
 }

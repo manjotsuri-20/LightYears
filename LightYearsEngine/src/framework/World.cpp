@@ -15,6 +15,7 @@ namespace ly
         , mPendingActors{}
         , mGameStages{}
         , mCurrentStage{mGameStages.end()}
+        , mHUD{nullptr}
     {
     }
 

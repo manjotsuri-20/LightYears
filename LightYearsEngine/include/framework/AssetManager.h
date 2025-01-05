@@ -1,6 +1,6 @@
 #pragma once
-#include "framework/Core.h"
 #include "SFML/Graphics.hpp"
+#include "framework/Core.h"
 
 namespace ly
 {
@@ -17,26 +17,26 @@ namespace ly
             AssetManager();
 
         private:
-            template<typename T>
+            template <typename T>
             shared<T> LoadAsset(const std::string& path_, Dictionary<std::string, shared<T>>& container_);
-            template<typename T>
+            template <typename T>
             void CleanUniqueRef(Dictionary<std::string, shared<T>>& container_);
             static unique<AssetManager> assetManager;
             std::string mRootDirectory;
             Dictionary<std::string, shared<sf::Texture>> mLoadedTextureMap;
             Dictionary<std::string, shared<sf::Font>> mLoadedFontMap;
     };
-    
+
     template <typename T>
-    inline shared<T> AssetManager::LoadAsset(const std::string &path_, Dictionary<std::string, shared<T>> &container_)
+    inline shared<T> AssetManager::LoadAsset(const std::string& path_, Dictionary<std::string, shared<T>>& container_)
     {
         auto _found = container_.find(path_);
-        if(_found != container_.end())
+        if (_found != container_.end())
         {
             return _found->second;
         }
         shared<T> _newAsset{new T};
-        if(_newAsset->loadFromFile(mRootDirectory + path_))
+        if (_newAsset->loadFromFile(mRootDirectory + path_))
         {
             container_.insert({path_, _newAsset});
             return _newAsset;
@@ -45,11 +45,11 @@ namespace ly
     }
 
     template <typename T>
-    inline void AssetManager::CleanUniqueRef(Dictionary<std::string, shared<T>> &container_)
+    inline void AssetManager::CleanUniqueRef(Dictionary<std::string, shared<T>>& container_)
     {
-        for(auto iter = container_.begin(); iter != container_.end();)
+        for (auto iter = container_.begin(); iter != container_.end();)
         {
-            if(iter->second.unique())
+            if (iter->second.unique())
             {
                 LOG("cleaning asset: %s", iter->first.c_str());
                 iter = container_.erase(iter);
@@ -60,4 +60,4 @@ namespace ly
             }
         }
     }
-}
+}  // namespace ly

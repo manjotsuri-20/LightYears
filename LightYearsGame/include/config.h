@@ -8,5 +8,4 @@ std::string GetResourceDir()
     #else
         return "/home/manjot.suri/Game/LightYears/LightYearsGame/assets/";
     #endif
-
 }

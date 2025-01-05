@@ -183,5 +183,4 @@ namespace ly
             RandomSpriteSize(mSprites[i]);
         }
     }
-
 }  // namespace ly

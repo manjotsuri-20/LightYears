@@ -111,6 +111,7 @@ namespace ly
         {
             return mCurrentWorld->DispatchEvent(event_);
         }
+        return false;
     }
 
     Application::~Application()
