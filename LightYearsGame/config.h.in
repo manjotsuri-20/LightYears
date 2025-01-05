@@ -8,5 +8,4 @@ std::string GetResourceDir()
     #else
         return "@RESOURCE_SRC_DIR@/";
     #endif
-
 }

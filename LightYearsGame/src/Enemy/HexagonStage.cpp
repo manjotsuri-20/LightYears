@@ -10,9 +10,9 @@ namespace ly
         mSideSpawnOffset{80.f},
         mSpawnGroupAmt{5},
         mCurrentSpawnCount{0},
-        mMidSpawnLoc{world_->GetWindowSize().x/2, -100.f},
-        mRightSpawnLoc{world_->GetWindowSize().x/2 + mSideSpawnOffset, -100.f - mSideSpawnOffset},
-        mLeftSpawnLoc{world_->GetWindowSize().x/2 - mSideSpawnOffset, -100.f - mSideSpawnOffset}
+        mMidSpawnLoc{world_->GetWindowSize().x / 2.f, -100.f},
+        mRightSpawnLoc{world_->GetWindowSize().x / 2.f + mSideSpawnOffset, -100.f - mSideSpawnOffset},
+        mLeftSpawnLoc{world_->GetWindowSize().x / 2.f - mSideSpawnOffset, -100.f - mSideSpawnOffset}
     {}
 
     void HexagonStage::StartStage()
