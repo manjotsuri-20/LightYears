@@ -78,6 +78,7 @@ namespace ly
         if (mPendingWorld && mPendingWorld != mCurrentWorld)
         {
             mCurrentWorld = mPendingWorld;
+            PhysicsSystem::Get().Cleanup();
             mCurrentWorld->BeginPlayInternal();
         }
     }

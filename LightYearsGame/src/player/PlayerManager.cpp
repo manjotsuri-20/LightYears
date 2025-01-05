@@ -1,4 +1,5 @@
 #include "player/PlayerManager.h"
+
 #include "player/Player.h"
 
 namespace ly
@@ -6,7 +7,8 @@ namespace ly
     unique<PlayerManager> PlayerManager::mPlayerManager{nullptr};
 
     PlayerManager::PlayerManager()
-    {}
+    {
+    }
 
     Player& PlayerManager::CreateNewPlayer()
     {
@@ -16,7 +18,7 @@ namespace ly
 
     Player* PlayerManager::GetPlayer(int playerIndex_)
     {
-        if(playerIndex_ >= 0 && playerIndex_ <= mPlayers.size())
+        if (playerIndex_ >= 0 && playerIndex_ <= mPlayers.size())
         {
             return &mPlayers[playerIndex_];
         }
@@ -25,7 +27,7 @@ namespace ly
 
     const Player* PlayerManager::GetPlayer(int playerIndex_) const
     {
-        if(playerIndex_ >= 0 && playerIndex_ <= mPlayers.size())
+        if (playerIndex_ >= 0 && playerIndex_ <= mPlayers.size())
         {
             return &mPlayers[playerIndex_];
         }
@@ -34,11 +36,15 @@ namespace ly
 
     PlayerManager& PlayerManager::Get()
     {
-        if(!mPlayerManager)
+        if (!mPlayerManager)
         {
             mPlayerManager = std::move(unique<PlayerManager>{new PlayerManager});
         }
         return *mPlayerManager;
     }
-} // namespace ly
 
+    void PlayerManager::Reset()
+    {
+        mPlayers.clear();
+    }
+}  // namespace ly

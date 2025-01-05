@@ -1,5 +1,7 @@
 #include "widgets/GameplayHUD.h"
 
+#include <string>
+
 #include "player/Player.h"
 #include "player/PlayerManager.h"
 #include "player/PlayerSpaceship.h"
@@ -17,20 +19,35 @@ namespace ly
         , mCriticalHealthBarColor{128, 0, 0, 255}
         , mCriticalThreshould{0.3f}
         , mWidgetSpacing{10.f}
+        , mWinLoseText{""}
+        , mFinalScoreText{""}
+        , mRestartButton{"Restart"}
+        , mQuitButton{"Quit"}
+        , mWindowSize{}
     {
         mFramerateText.SetTextSize(30);
         mPlayerLifeText.SetTextSize(20);
         mPlayerScoreText.SetTextSize(20);
+
+        mWinLoseText.SetVisibility(false);
+        mFinalScoreText.SetVisibility(false);
+        mRestartButton.SetVisibility(false);
+        mQuitButton.SetVisibility(false);
     }
 
     void GameplayHUD::Draw(sf::RenderWindow& windowRef_)
     {
+        mWindowSize = windowRef_.getSize();
         mFramerateText.NativeDraw(windowRef_);
         mPlayerHealthBar.NativeDraw(windowRef_);
         mPlayerLifeIcon.NativeDraw(windowRef_);
         mPlayerLifeText.NativeDraw(windowRef_);
         mPlayerScoreIcon.NativeDraw(windowRef_);
         mPlayerScoreText.NativeDraw(windowRef_);
+        mWinLoseText.NativeDraw(windowRef_);
+        mFinalScoreText.NativeDraw(windowRef_);
+        mRestartButton.NativeDraw(windowRef_);
+        mQuitButton.NativeDraw(windowRef_);
     }
 
     void GameplayHUD::Tick(float deltaTime_)
@@ -43,6 +60,7 @@ namespace ly
     void GameplayHUD::Init(const sf::RenderWindow& windowRef_)
     {
         auto _windowSize = windowRef_.getSize();
+        mWindowSize = _windowSize;
         mPlayerHealthBar.SetWidgetLocation(sf::Vector2f{10.f, _windowSize.y - 50.f});
 
         sf::Vector2f _nextWidgetLoc = mPlayerHealthBar.GetWidgetLocation();
@@ -60,6 +78,28 @@ namespace ly
 
         RefreshHealthBar();
         ConnectPlayerStatus();
+
+        mWinLoseText.SetTextSize(40.f);
+        mWinLoseText.SetWidgetLocation({_windowSize.x / 2.f - mWinLoseText.GetBound().width / 2.f, 100.f});
+
+        mFinalScoreText.SetTextSize(40.f);
+        mFinalScoreText.SetWidgetLocation({_windowSize.x / 2.f - mFinalScoreText.GetBound().width / 2.f, 200.f});
+
+        mRestartButton.SetWidgetLocation({_windowSize.x / 2.f - mRestartButton.GetBound().width / 2.f, _windowSize.y / 2.f});
+        mQuitButton.SetWidgetLocation(mRestartButton.GetWidgetLocation() + sf::Vector2f{0.f, 50.f});
+
+        mRestartButton.onButtonClicked.BindAction(GetWeakRef(), &GameplayHUD::RestartButtonClicked);
+        mQuitButton.onButtonClicked.BindAction(GetWeakRef(), &GameplayHUD::QuitButtonClicked);
+    }
+
+    void GameplayHUD::RestartButtonClicked()
+    {
+        onRestartButtonClicked.Broadcast();
+    }
+
+    void GameplayHUD::QuitButtonClicked()
+    {
+        onQuitButtonClicked.Broadcast();
     }
 
     void GameplayHUD::PlayerHealthUpdated(float amt_, float currentHealth_, float maxHealth_)
@@ -126,6 +166,30 @@ namespace ly
 
     bool GameplayHUD::HandleEvent(const sf::Event& event_)
     {
+        if (mRestartButton.HandleEvent(event_)) return true;
+        if (mQuitButton.HandleEvent(event_)) return true;
         return HUD::HandleEvent(event_);
+    }
+
+    void GameplayHUD::GameFinished(bool playerWon_)
+    {
+        mWinLoseText.SetVisibility(true);
+        mFinalScoreText.SetVisibility(true);
+        mRestartButton.SetVisibility(true);
+        mQuitButton.SetVisibility(true);
+
+        int _score = PlayerManager::Get().GetPlayer()->GetScore();
+        mFinalScoreText.SetString("Score: " + std::to_string(_score));
+
+        if (playerWon_)
+        {
+            mWinLoseText.SetString("You Won!");
+        }
+        else
+        {
+            mWinLoseText.SetString("You Lose!");
+        }
+        mWinLoseText.SetWidgetLocation({mWindowSize.x / 2.f - mWinLoseText.GetBound().width / 2.f, 100.f});
+        mFinalScoreText.SetWidgetLocation({mWindowSize.x / 2.f - mFinalScoreText.GetBound().width / 2.f, 200.f});
     }
 }  // namespace ly

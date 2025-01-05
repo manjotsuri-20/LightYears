@@ -12,6 +12,7 @@ namespace ly
             Player* GetPlayer(int playerIndex_ = 0);
             const Player* GetPlayer(int playerIndex_ = 0) const;
             static PlayerManager& Get();
+            void Reset();
 
         protected:
             PlayerManager();
@@ -20,4 +21,4 @@ namespace ly
             List<Player> mPlayers;
             static unique<PlayerManager> mPlayerManager;
     };
-} // namespace ly
+}  // namespace ly

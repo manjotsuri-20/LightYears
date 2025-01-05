@@ -1,4 +1,6 @@
 #pragma once
+#include "SFML/System/Vector2.hpp"
+#include "framework/Delegate.h"
 #include "widgets/Button.h"
 #include "widgets/HUD.h"
 #include "widgets/ImageWidget.h"
@@ -15,6 +17,9 @@ namespace ly
             virtual void Draw(sf::RenderWindow& windowRef_) override;
             virtual void Tick(float deltaTime_) override;
             virtual bool HandleEvent(const sf::Event& event_) override;
+            void GameFinished(bool playerWon_) override;
+            Delegate<> onRestartButtonClicked;
+            Delegate<> onQuitButtonClicked;
 
         private:
             virtual void Init(const sf::RenderWindow& windowRef_) override;
@@ -25,6 +30,8 @@ namespace ly
             void RefreshHealthBar();
             void ConnectPlayerStatus();
             void UpdateHealthBar(float currHealth_, float maxHealth_);
+            void RestartButtonClicked();
+            void QuitButtonClicked();
             TextWidget mFramerateText;
             ValueGauge mPlayerHealthBar;
             ImageWidget mPlayerLifeIcon;
@@ -37,6 +44,13 @@ namespace ly
             float mCriticalThreshould;
 
             float mWidgetSpacing;
+
+            TextWidget mWinLoseText;
+            TextWidget mFinalScoreText;
+            Button mRestartButton;
+            Button mQuitButton;
+
+            sf::Vector2u mWindowSize;
     };
 
 }  // namespace ly

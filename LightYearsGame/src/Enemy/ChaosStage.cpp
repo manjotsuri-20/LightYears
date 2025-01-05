@@ -110,6 +110,6 @@ namespace ly
 
     void ChaosStage::StageDurationReached()
     {
-        StageFinished();
+        FinishStage();
     }
 }  // namespace ly

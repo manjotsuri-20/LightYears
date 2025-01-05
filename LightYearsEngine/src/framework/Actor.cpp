@@ -1,5 +1,7 @@
 #include "framework/Actor.h"
 
+#include <cstdint>
+
 #include <box2d/b2_body.h>
 
 #include "framework/AssetManager.h"
@@ -135,6 +137,7 @@ namespace ly
         if (mPhysicsBody)
         {
             PhysicsSystem::Get().RemoveListener(mPhysicsBody);
+            mPhysicsBody->GetUserData().pointer = reinterpret_cast<uintptr_t>(nullptr);
             mPhysicsBody = nullptr;
         }
     }
@@ -230,6 +233,11 @@ namespace ly
 
     void Actor::ApplyDamage(float amt_)
     {
+    }
+
+    void Actor::SetTextureRepeated(bool repeated_)
+    {
+        mTexture->setRepeated(repeated_);
     }
 
     Actor::~Actor()

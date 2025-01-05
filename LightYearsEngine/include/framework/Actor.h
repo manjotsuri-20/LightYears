@@ -23,7 +23,7 @@ namespace ly
 
             void SetTexture(const std::string& texturePath_);
 
-            void Render(sf::RenderWindow& window_);
+            virtual void Render(sf::RenderWindow& window_);
 
             void SetActorLocation(const sf::Vector2f& newLoc_);
 
@@ -94,6 +94,8 @@ namespace ly
             }
 
             Delegate<Actor*> onActorDestroy;
+
+            void SetTextureRepeated(bool repeated_);
 
             virtual ~Actor();
 

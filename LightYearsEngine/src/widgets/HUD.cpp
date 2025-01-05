@@ -2,16 +2,16 @@
 
 namespace ly
 {
-    void HUD::NativeInit(const sf::RenderWindow &windowRef_)
+    void HUD::NativeInit(const sf::RenderWindow& windowRef_)
     {
-        if(!mAlreadyInit)
+        if (!mAlreadyInit)
         {
             Init(windowRef_);
             mAlreadyInit = true;
         }
     }
 
-    bool HUD::HandleEvent(const sf::Event &event_)
+    bool HUD::HandleEvent(const sf::Event& event_)
     {
         return false;
     }
@@ -22,10 +22,14 @@ namespace ly
 
     HUD::HUD()
         : mAlreadyInit{false}
-    {}
+    {
+    }
 
-    void HUD::Init(const sf::RenderWindow &windowRef_)
-    {}
+    void HUD::Init(const sf::RenderWindow& windowRef_)
+    {
+    }
 
-} // namespace ly
-
+    void HUD::GameFinished(bool playerWon_)
+    {
+    }
+}  // namespace ly

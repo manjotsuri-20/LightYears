@@ -1,6 +1,7 @@
 #pragma once
-#include "framework/World.h"
 #include "framework/TimerManager.h"
+#include "framework/World.h"
+#include "widgets/GameplayHUD.h"
 
 namespace ly
 {
@@ -15,9 +16,12 @@ namespace ly
         private:
             void GameOver();
             weak<PlayerSpaceship> mPlayerSpaceship;
-            weak<HUD> mGameplayHUD;
+            weak<GameplayHUD> mGameplayHUD;
             virtual void BeginPlay() override;
             virtual void InitGameStages() override;
-
+            virtual void AllGameStageFinished() override;
+            void RestartGame();
+            void QuitGame();
+            void SpawnCosmetics();
     };
-} // namespace ly
+}  // namespace ly
