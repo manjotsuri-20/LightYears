@@ -8,15 +8,34 @@
 1. Clone the repository:
 
     `git clone https://github.com/manjotsuri-20/LightYears/tree/master `
-
-2. Create a build folder:
+### Build the code locally
+1. Create a build folder:
 
     `cd LightYears && mkdir build`
 
-3. Build the code inside the build folder
+2. Build the code inside the build folder
 
     `cd build/ && rm -rf * && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j5`
 
-4. Run the Game
+3. Run the Game
 
     `cd LightYearsGame && ./LightYearsGame`
+
+
+### Build using docker
+
+1. Install docker and add docker to the xserver group:
+
+    `xhost +local:docker`
+
+2. Go to the repository folder:
+    
+    ` cd LightYears `
+
+3. Build the Image:
+
+    `sudo docker build -t lightyears:latest .`
+
+4. Run the Image:
+
+    `sudo docker run -e DISPLAY=$DISPLAY --net=host lightyears`
