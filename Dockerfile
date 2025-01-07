@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 AS builder
 COPY CMakeLists.txt ./exec/CMakeLists.txt
 COPY LightYearsEngine/ ./exec/LightYearsEngine
 COPY LightYearsGame/ ./exec/LightYearsGame
@@ -28,4 +28,4 @@ RUN mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j5
 RUN rm -rf LightYearsGame/ LightYearsEngine/ CMakeLists.txt
 
 WORKDIR build/LightYearsGame/
-CMD ["/bin/bash", "-c", "export LIBGL_ALWAYS_SOFTWARE=1 && ./LightYearsGame"]
+CMD ["/bin/bash", "-c", "./LightYearsGame"]

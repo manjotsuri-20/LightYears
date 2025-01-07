@@ -37,5 +37,7 @@
     `sudo docker build -t lightyears:latest .`
 
 4. Run the Image:
+    
+    `sudo docker run -e DISPLAY=$DISPLAY --net=host -v /dev:/dev lightyears`
 
-    `sudo docker run -e DISPLAY=$DISPLAY --net=host lightyears`
+
