@@ -135,11 +135,15 @@ namespace ly
         {
             _color = mPauseButtonColor;
             _text = mPauseButtonText;
+            mRestartButton.SetVisibility(false);
+            mQuitButton.SetVisibility(false);
         }
         else
         {
             _color = mResumeButtonColor;
             _text = mResumeButtonText;
+            mRestartButton.SetVisibility(true);
+            mQuitButton.SetVisibility(true);
         }
         mPauseButton.SetColor(_color);
         mPauseButton.setTextString(_text);
