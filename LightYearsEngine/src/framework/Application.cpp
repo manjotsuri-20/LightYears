@@ -15,6 +15,7 @@ namespace ly
         , mCurrentWorld{nullptr}
         , mCleanCycleClock{sf::Clock{}}
         , mCleanCycleInterval{2.f}
+        , mGamePaused{false}
     {
     }
 
@@ -56,14 +57,18 @@ namespace ly
     {
         Tick(deltaTime_);
 
-        if (mCurrentWorld)
+        if (!mGamePaused)
         {
-            mCurrentWorld->TickInternal(deltaTime_);
+
+            if (mCurrentWorld)
+            {
+                mCurrentWorld->TickInternal(deltaTime_);
+            }
+
+            TimerManager::Get().UpdateTimer(deltaTime_);
+
+            PhysicsSystem::Get().Step(deltaTime_);
         }
-
-        TimerManager::Get().UpdateTimer(deltaTime_);
-
-        PhysicsSystem::Get().Step(deltaTime_);
 
         if (mCleanCycleClock.getElapsedTime().asSeconds() >= mCleanCycleInterval)
         {
@@ -122,6 +127,11 @@ namespace ly
     void Application::QuitApplication()
     {
         mWindow.close();
+    }
+
+    void Application::PauseGame(bool val_)
+    {
+        mGamePaused = val_;
     }
 
 }  // namespace ly

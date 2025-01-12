@@ -1,6 +1,8 @@
 #include "widgets/Button.h"
 
+#include "SFML/Graphics/Color.hpp"
 #include "SFML/Graphics/Rect.hpp"
+#include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Event.hpp"
 #include "SFML/Window/Mouse.hpp"
 #include "framework/AssetManager.h"
@@ -12,12 +14,12 @@ namespace ly
         , mButtonSprite{*(mButtonTexture.get())}
         , mButtonFont{AssetManager::Get().LoadFont("SpaceShooterRedux/Bonus/kenvector_future.ttf")}
         , mButtonText{textString_, *(mButtonFont.get())}
-        , mButtonDefaultColor{128, 128, 128, 255}
-        , mButtonDownColor{64, 64, 64, 255}
-        , mButtonHoverColor{190, 190, 190, 255}
         , mIsButtonDown{false}
     {
-        mButtonSprite.setColor(mButtonDefaultColor);
+        mButtonColor.defaultColor = sf::Color{128, 128, 128, 255};
+        mButtonColor.downColor = sf::Color{64, 64, 64, 255};
+        mButtonColor.hoverColor = sf::Color{190, 190, 190, 255};
+        mButtonSprite.setColor(mButtonColor.defaultColor);
         CenterText();
     }
 
@@ -46,7 +48,7 @@ namespace ly
 
     void Button::CenterText()
     {
-        sf::Vector2f _widgetCentre = GetCentrePosition();
+        sf::Vector2f  _widgetCentre = GetCentrePosition();
         sf::FloatRect _textBound = mButtonText.getGlobalBounds();
         mButtonText.setPosition(_widgetCentre - sf::Vector2f{_textBound.width / 2.f, _textBound.height});
     }
@@ -54,6 +56,18 @@ namespace ly
     void Button::setTextString(const std::string& newString_)
     {
         mButtonText.setString(newString_);
+        CenterText();
+    }
+
+    void Button::SetScale(const sf::Vector2f& scaleVec_)
+    {
+        mButtonSprite.scale(scaleVec_);
+    }
+
+    void Button::SetColor(const ButtonColor& color_)
+    {
+        mButtonColor = color_;
+        mButtonSprite.setColor(mButtonColor.defaultColor);
     }
 
     void Button::SetTextSize(unsigned int characterSize_)
@@ -109,17 +123,17 @@ namespace ly
     void Button::ButtonUp()
     {
         mIsButtonDown = false;
-        mButtonSprite.setColor(mButtonDefaultColor);
+        mButtonSprite.setColor(mButtonColor.defaultColor);
     }
 
     void Button::ButtonDown()
     {
         mIsButtonDown = true;
-        mButtonSprite.setColor(mButtonDownColor);
+        mButtonSprite.setColor(mButtonColor.downColor);
     }
 
     void Button::ButtonHower()
     {
-        mButtonSprite.setColor(mButtonHoverColor);
+        mButtonSprite.setColor(mButtonColor.hoverColor);
     }
 }  // namespace ly

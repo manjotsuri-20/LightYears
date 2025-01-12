@@ -32,6 +32,13 @@ namespace ly
 
             void QuitApplication();
 
+            void PauseGame(bool val_);
+
+            bool GetGamePaused() const
+            {
+                return mGamePaused;
+            }
+
         private:
             bool DispatchEvent(const sf::Event& event_);
             void TickInternal(float delta_time_);
@@ -48,6 +55,7 @@ namespace ly
             shared<World> mPendingWorld;
             sf::Clock mCleanCycleClock;
             float mCleanCycleInterval;
+            bool mGamePaused;
     };
 
     template <typename WorldType>

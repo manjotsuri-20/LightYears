@@ -2,9 +2,11 @@
 
 #include <string>
 
+#include "SFML/System/Vector2.hpp"
 #include "player/Player.h"
 #include "player/PlayerManager.h"
 #include "player/PlayerSpaceship.h"
+#include "widgets/Button.h"
 
 namespace ly
 {
@@ -17,17 +19,30 @@ namespace ly
         , mPlayerScoreText{""}
         , mHealthyHealthBarColor{128, 255, 128, 255}
         , mCriticalHealthBarColor{128, 0, 0, 255}
+        , mPauseButtonText{"Pause"}
+        , mResumeButtonText{"Resume"}
         , mCriticalThreshould{0.3f}
         , mWidgetSpacing{10.f}
         , mWinLoseText{""}
         , mFinalScoreText{""}
         , mRestartButton{"Restart"}
         , mQuitButton{"Quit"}
+        , mPauseButton{"Pause"}
         , mWindowSize{}
     {
         mFramerateText.SetTextSize(30);
         mPlayerLifeText.SetTextSize(20);
         mPlayerScoreText.SetTextSize(20);
+
+        mPauseButton.SetScale(sf::Vector2f{0.5f, 1.f});
+
+        mPauseButtonColor.defaultColor = sf::Color{255, 0, 0, 255};
+        mPauseButtonColor.downColor = sf::Color{50, 0, 0, 255};
+        mPauseButtonColor.hoverColor = sf::Color{125, 0, 0, 225};
+        mResumeButtonColor.defaultColor = sf::Color{0, 255, 0, 255};
+        mResumeButtonColor.downColor = sf::Color{0, 50, 0, 255};
+        mResumeButtonColor.hoverColor = sf::Color{0, 125, 0, 255};
+        mPauseButton.SetColor(mPauseButtonColor);
 
         mWinLoseText.SetVisibility(false);
         mFinalScoreText.SetVisibility(false);
@@ -48,11 +63,12 @@ namespace ly
         mFinalScoreText.NativeDraw(windowRef_);
         mRestartButton.NativeDraw(windowRef_);
         mQuitButton.NativeDraw(windowRef_);
+        mPauseButton.NativeDraw(windowRef_);
     }
 
     void GameplayHUD::Tick(float deltaTime_)
     {
-        int _frameRate = int(1 / deltaTime_);
+        int         _frameRate = int(1 / deltaTime_);
         std::string _frameRateString = "Frame Rate: " + std::to_string(_frameRate);
         mFramerateText.SetString(_frameRateString);
     }
@@ -88,8 +104,12 @@ namespace ly
         mRestartButton.SetWidgetLocation({_windowSize.x / 2.f - mRestartButton.GetBound().width / 2.f, _windowSize.y / 2.f});
         mQuitButton.SetWidgetLocation(mRestartButton.GetWidgetLocation() + sf::Vector2f{0.f, 50.f});
 
+        mPauseButton.SetTextSize(20.f);
+        mPauseButton.SetWidgetLocation(sf::Vector2f{_windowSize.x - mPauseButton.GetBound().width - 10.f, 10.f});
+
         mRestartButton.onButtonClicked.BindAction(GetWeakRef(), &GameplayHUD::RestartButtonClicked);
         mQuitButton.onButtonClicked.BindAction(GetWeakRef(), &GameplayHUD::QuitButtonClicked);
+        mPauseButton.onButtonClicked.BindAction(GetWeakRef(), &GameplayHUD::PauseButtonClicked);
     }
 
     void GameplayHUD::RestartButtonClicked()
@@ -100,6 +120,29 @@ namespace ly
     void GameplayHUD::QuitButtonClicked()
     {
         onQuitButtonClicked.Broadcast();
+    }
+
+    void GameplayHUD::PauseButtonClicked()
+    {
+        onPauseButtonClicked.Broadcast();
+    }
+
+    void GameplayHUD::UpdatePauseButtonStatus(bool status_)
+    {
+        ButtonColor _color;
+        std::string _text;
+        if (status_)
+        {
+            _color = mPauseButtonColor;
+            _text = mPauseButtonText;
+        }
+        else
+        {
+            _color = mResumeButtonColor;
+            _text = mResumeButtonText;
+        }
+        mPauseButton.SetColor(_color);
+        mPauseButton.setTextString(_text);
     }
 
     void GameplayHUD::PlayerHealthUpdated(float amt_, float currentHealth_, float maxHealth_)
@@ -168,6 +211,7 @@ namespace ly
     {
         if (mRestartButton.HandleEvent(event_)) return true;
         if (mQuitButton.HandleEvent(event_)) return true;
+        if (mPauseButton.HandleEvent(event_)) return true;
         return HUD::HandleEvent(event_);
     }
 
@@ -177,6 +221,7 @@ namespace ly
         mFinalScoreText.SetVisibility(true);
         mRestartButton.SetVisibility(true);
         mQuitButton.SetVisibility(true);
+        mPauseButton.SetVisibility(false);
 
         int _score = PlayerManager::Get().GetPlayer()->GetScore();
         mFinalScoreText.SetString("Score: " + std::to_string(_score));

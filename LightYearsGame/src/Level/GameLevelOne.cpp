@@ -32,6 +32,7 @@ namespace ly
         mGameplayHUD = SpawnHUD<GameplayHUD>();
         mGameplayHUD.lock()->onRestartButtonClicked.BindAction(GetWeakRef(), &GameLevelOne::RestartGame);
         mGameplayHUD.lock()->onQuitButtonClicked.BindAction(GetWeakRef(), &GameLevelOne::QuitGame);
+        mGameplayHUD.lock()->onPauseButtonClicked.BindAction(GetWeakRef(), &GameLevelOne::PauseGame);
     }
 
     void GameLevelOne::PlayerSpaceshipDestroyed(Actor* destroyedPlayerSpaceship)
@@ -71,23 +72,33 @@ namespace ly
     void GameLevelOne::GameOver()
     {
         LOG("GameOver");
+        GetApplication()->PauseGame(true);
         mGameplayHUD.lock()->GameFinished(false);
     }
 
     void GameLevelOne::AllGameStageFinished()
     {
+        GetApplication()->PauseGame(true);
         mGameplayHUD.lock()->GameFinished(true);
     }
 
     void GameLevelOne::RestartGame()
     {
         PlayerManager::Get().Reset();
+        GetApplication()->PauseGame(false);
         GetApplication()->LoadWorld<GameLevelOne>();
     }
 
     void GameLevelOne::QuitGame()
     {
         GetApplication()->QuitApplication();
+    }
+
+    void GameLevelOne::PauseGame()
+    {
+        bool _check = GetApplication()->GetGamePaused();
+        GetApplication()->PauseGame(!_check);
+        mGameplayHUD.lock()->UpdatePauseButtonStatus(_check);
     }
 
     void GameLevelOne::SpawnCosmetics()
@@ -110,28 +121,7 @@ namespace ly
         _planets.lock()->SetVelocities({0.f, 30.f}, {0, 80.f});
 
         weak<BackgroundLayer> _meteors = SpawnActor<BackgroundLayer>();
-        _meteors.lock()->SetAssets({
-            "SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_big1.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_big2.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_big3.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_big4.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_med1.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_med3.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_small1.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_small2.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny1.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny2.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorGrey_big1.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorGrey_big2.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorGrey_big3.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorGrey_big4.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorGrey_med1.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorGrey_med2.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorGrey_small1.png",
-			"SpaceShooterRedux/PNG/Meteors/meteorGrey_small2.png"
-        });
+        _meteors.lock()->SetAssets({"SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png", "SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_big1.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_big2.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_big3.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_big4.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_med1.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_med3.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_small1.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_small2.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny1.png", "SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny2.png", "SpaceShooterRedux/PNG/Meteors/meteorGrey_big1.png", "SpaceShooterRedux/PNG/Meteors/meteorGrey_big2.png", "SpaceShooterRedux/PNG/Meteors/meteorGrey_big3.png", "SpaceShooterRedux/PNG/Meteors/meteorGrey_big4.png", "SpaceShooterRedux/PNG/Meteors/meteorGrey_med1.png", "SpaceShooterRedux/PNG/Meteors/meteorGrey_med2.png", "SpaceShooterRedux/PNG/Meteors/meteorGrey_small1.png", "SpaceShooterRedux/PNG/Meteors/meteorGrey_small2.png"});
 
         _meteors.lock()->SetSpriteCount(20);
         _meteors.lock()->SetSizes(0.2f, 0.5f);

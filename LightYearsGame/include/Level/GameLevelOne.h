@@ -23,5 +23,6 @@ namespace ly
             void RestartGame();
             void QuitGame();
             void SpawnCosmetics();
+            void PauseGame();
     };
 }  // namespace ly
