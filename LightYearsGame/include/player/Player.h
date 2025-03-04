@@ -1,7 +1,8 @@
 #pragma once
-#include "framework/Object.h"
-#include "framework/Delegate.h"
+#include "SFML/Audio/Music.hpp"
 #include "framework/Core.h"
+#include "framework/Delegate.h"
+#include "framework/Object.h"
 #include "player/PlayerSpaceship.h"
 
 namespace ly
@@ -10,24 +11,33 @@ namespace ly
     class Player : public Object
     {
         public:
-            Player();
+        Player();
 
-            weak<PlayerSpaceship> SpawnPlayerSpaceship(World* world_);
-            const weak<PlayerSpaceship> GetCurrentSpaceship() const { return mCurrentPlayerSpaceship; }
+        weak<PlayerSpaceship>       SpawnPlayerSpaceship(World* world_);
+        const weak<PlayerSpaceship> GetCurrentSpaceship() const
+        {
+            return mCurrentPlayerSpaceship;
+        }
 
-            void AddLifeCount(unsigned int count_);
-            int GetLifeCount() const { return mLifeCount; }
+        void AddLifeCount(unsigned int count_);
+        int  GetLifeCount() const
+        {
+            return mLifeCount;
+        }
 
-            void AddScore(unsigned int amt_);
-            int GetScore() const { return mScore; }
+        void AddScore(unsigned int amt_);
+        int  GetScore() const
+        {
+            return mScore;
+        }
 
-            Delegate<int> onLifeChange;
-            Delegate<int> onScoreChange;
-            Delegate<> onLifeExhausted;
+        Delegate<int> onLifeChange;
+        Delegate<int> onScoreChange;
+        Delegate<>    onLifeExhausted;
 
         private:
-            unsigned int mLifeCount;
-            unsigned int mScore;
-            weak<PlayerSpaceship> mCurrentPlayerSpaceship;
+        unsigned int          mLifeCount;
+        unsigned int          mScore;
+        weak<PlayerSpaceship> mCurrentPlayerSpaceship;
     };
-} // namespace ly
+}  // namespace ly

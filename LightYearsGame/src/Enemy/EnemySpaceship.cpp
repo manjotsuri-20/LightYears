@@ -47,6 +47,7 @@ namespace ly
 
         mRewardSpawnWeight = weight_;
     }
+
     void EnemySpaceship::Blew()
     {
         SpawnReward();

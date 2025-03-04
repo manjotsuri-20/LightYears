@@ -1,4 +1,5 @@
 #pragma once
+#include "SFML/Audio.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "framework/Delegate.h"
 #include "widgets/Button.h"
@@ -35,6 +36,8 @@ namespace ly
         void         RestartButtonClicked();
         void         QuitButtonClicked();
         void         PauseButtonClicked();
+        void         PlayPlayerDied();
+        void         PlayerLifeExhausted();
         TextWidget   mFramerateText;
         ValueGauge   mPlayerHealthBar;
         ImageWidget  mPlayerLifeIcon;
@@ -59,6 +62,12 @@ namespace ly
         Button     mPauseButton;
 
         sf::Vector2u mWindowSize;
+
+        unique<sf::Music>       mBackgroundMusic;
+        shared<sf::SoundBuffer> mPlayerLifeReduceSoundBuffer;
+        shared<sf::SoundBuffer> mPlayerLifeExhaustedBuffer;
+        sf::Sound               mPlayerLifeReduceSound;
+        sf::Sound               mPlayerLifeExhaustedSound;
     };
 
 }  // namespace ly

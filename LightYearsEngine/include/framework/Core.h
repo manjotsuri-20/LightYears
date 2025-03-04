@@ -15,6 +15,18 @@ namespace ly
     template<typename T>
     using shared = std::shared_ptr<T>;
 
+    template<typename T, typename... Args>
+    std::shared_ptr<T> makeShared(Args&&... args_) 
+    {
+        return std::make_shared<T>(std::forward<Args>(args_)...);
+    }
+
+    template<typename T, typename... Args>
+    std::unique_ptr<T> makeUnique(Args&&... args_) 
+    {
+        return std::make_unique<T>(std::forward<Args>(args_)...);
+    }
+    
     template<typename T>
     using weak = std::weak_ptr<T>;
 

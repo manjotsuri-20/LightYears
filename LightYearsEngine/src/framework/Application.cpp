@@ -41,7 +41,7 @@ namespace ly
             _accumulatedTime += mTickClock.restart().asSeconds();
             if (_accumulatedTime > _targetDeltaTime)
             {
-                TickInternal(_accumulatedTime);  // pass accumulated time instead of delta time so as to run the loop according to the actual time passed
+                TickInternal(_targetDeltaTime);  // don't pass accumulated time becuse sometimes it takes time to render window because of which behaviour of game is weired // pass accumulated time instead of delta time so as to run the loop according to the actual time passed
                 _accumulatedTime -= _targetDeltaTime;
                 RenderInternal();
             }

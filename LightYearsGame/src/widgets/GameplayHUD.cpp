@@ -1,8 +1,11 @@
 #include "widgets/GameplayHUD.h"
 
 #include <string>
+#include <utility>
 
+#include "SFML/Audio/Sound.hpp"
 #include "SFML/System/Vector2.hpp"
+#include "framework/AssetManager.h"
 #include "player/Player.h"
 #include "player/PlayerManager.h"
 #include "player/PlayerSpaceship.h"
@@ -29,6 +32,11 @@ namespace ly
         , mQuitButton{"Quit"}
         , mPauseButton{"Pause"}
         , mWindowSize{}
+        , mBackgroundMusic{AssetManager::Get().LoadMusic("SpaceShooterRedux/Music/stranger-things-124008.ogg")}
+        , mPlayerLifeReduceSoundBuffer{AssetManager::Get().LoadSoundBuffer("SpaceShooterRedux/Bonus/sfx_laser1.ogg")}
+        , mPlayerLifeExhaustedBuffer{AssetManager::Get().LoadSoundBuffer("SpaceShooterRedux/Bonus/sfx_laser2.ogg")}
+        , mPlayerLifeReduceSound{*mPlayerLifeReduceSoundBuffer}
+        , mPlayerLifeExhaustedSound{*mPlayerLifeExhaustedBuffer}
     {
         mFramerateText.SetTextSize(30);
         mPlayerLifeText.SetTextSize(20);
@@ -110,11 +118,17 @@ namespace ly
         mRestartButton.onButtonClicked.BindAction(GetWeakRef(), &GameplayHUD::RestartButtonClicked);
         mQuitButton.onButtonClicked.BindAction(GetWeakRef(), &GameplayHUD::QuitButtonClicked);
         mPauseButton.onButtonClicked.BindAction(GetWeakRef(), &GameplayHUD::PauseButtonClicked);
+
+        mBackgroundMusic->setVolume(5.f);
+        mBackgroundMusic->play();
+        mBackgroundMusic->setPlayingOffset(sf::milliseconds(1.f));
+        mBackgroundMusic->setLoop(true);
     }
 
     void GameplayHUD::RestartButtonClicked()
     {
         onRestartButtonClicked.Broadcast();
+        mBackgroundMusic->play();
     }
 
     void GameplayHUD::QuitButtonClicked()
@@ -137,6 +151,7 @@ namespace ly
             _text = mPauseButtonText;
             mRestartButton.SetVisibility(false);
             mQuitButton.SetVisibility(false);
+            mBackgroundMusic->play();
         }
         else
         {
@@ -144,6 +159,7 @@ namespace ly
             _text = mResumeButtonText;
             mRestartButton.SetVisibility(true);
             mQuitButton.SetVisibility(true);
+            mBackgroundMusic->pause();
         }
         mPauseButton.SetColor(_color);
         mPauseButton.setTextString(_text);
@@ -154,9 +170,26 @@ namespace ly
         UpdateHealthBar(currentHealth_, maxHealth_);
     }
 
+    void GameplayHUD::PlayPlayerDied()
+    {
+        if (mPlayerLifeReduceSoundBuffer)
+        {
+            mPlayerLifeReduceSound.play();
+        }
+    }
+
+    void GameplayHUD::PlayerLifeExhausted()
+    {
+        if (mPlayerLifeExhaustedBuffer)
+        {
+            mPlayerLifeExhaustedSound.play();
+        }
+    }
+
     void GameplayHUD::PlayerLifeCountUpdated(int amt_)
     {
         mPlayerLifeText.SetString(std::to_string(amt_));
+        PlayPlayerDied();
     }
 
     void GameplayHUD::PlayerScoreUpdated(int newScore_)
@@ -191,6 +224,7 @@ namespace ly
             int _lifeCount = _player->GetLifeCount();
             mPlayerLifeText.SetString(std::to_string(_lifeCount));
             _player->onLifeChange.BindAction(GetWeakRef(), &GameplayHUD::PlayerLifeCountUpdated);
+            _player->onLifeExhausted.BindAction(GetWeakRef(), &GameplayHUD::PlayerLifeExhausted);
 
             int _playerScore = _player->GetScore();
             mPlayerScoreText.SetString(std::to_string(_playerScore));
@@ -240,5 +274,7 @@ namespace ly
         }
         mWinLoseText.SetWidgetLocation({mWindowSize.x / 2.f - mWinLoseText.GetBound().width / 2.f, 100.f});
         mFinalScoreText.SetWidgetLocation({mWindowSize.x / 2.f - mFinalScoreText.GetBound().width / 2.f, 200.f});
+
+        mBackgroundMusic->stop();
     }
 }  // namespace ly
